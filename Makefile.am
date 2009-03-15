@@ -1,0 +1,6 @@
+#Project Build file
+SUBDIRS=src
+
+AM_CPPFLAGS = $(LIBGCRYPT_CFLAGS)
+LDADD = $(LIBGCRYPT_LIBS)
+
