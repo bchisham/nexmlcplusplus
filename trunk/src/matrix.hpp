@@ -1,6 +1,10 @@
 #ifndef MATRIX_HPP_
 #define MATRIX_HPP_
 
+#include <vector>
+#include <fstream>
+#include "row.hpp"
+
 namespace NeXML {
   /**
    * Represents a single matrix block in a NeXML file.
@@ -9,12 +13,24 @@ namespace NeXML {
   public:
     /**
      */
-    Matrix(){}
+    Matrix():rows_(){}
     /**
      */
-    virtual ~Matrix(){}
+    virtual ~Matrix();
+    /**
+     */
+    void addrow( Row* row );
+    /**
+     */
+    Row* getrow( unsigned int row )const;
+    /**
+     */
+    friend std::ostream& operator<<(std::ostream& out, const Matrix& rhs);
+    /**
+     */
+    friend std::ostream& operator<<(std::ostream& out, const Matrix* rhs);
   private:
-    
+    std::vector< Row* > rows_;
   };
   
 }

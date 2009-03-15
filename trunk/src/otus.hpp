@@ -2,9 +2,12 @@
 #define OTUS_HPP_
 
 #include "otu.hpp"
+#include "id.hpp"
 #include <vector>
 #include <map>
 #include <glibmm/ustring.h>
+#include <fstream>
+
 namespace NeXML {
   /**
    */
@@ -25,7 +28,13 @@ namespace NeXML {
     /**
      */
     Otu* getotu( Glib::ustring id )const;
+
+    ID getid()const{ return id_; }
+
+    friend std::ostream& operator<<( std::ostream& out, const Otus& rhs);
+    friend std::ostream& operator<<( std::ostream& out, const Otus* rhs);
   private:
+    ID id_;
     std::vector< Otu* > otus_;
     std::map< Glib::ustring, Otu* > otus_by_id_;
   };
