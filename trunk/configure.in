@@ -1,0 +1,36 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.63])
+AC_INIT([NeXMLCpp], [0.00000001], [bchisham@cs.nmsu.edu])
+AC_CONFIG_SRCDIR([src/nexml.hpp])
+AC_CONFIG_HEADER([src/config.h])
+AM_INIT_AUTOMAKE( NeXMLCpp, 0.00000001 )
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_LIBTOOL
+AC_PROG_MAKE_SET
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_SUBST(LIBTOOL_DEPS)
+
+# Checks for libraries.
+PKG_CHECK_MODULES(LIBXML, libxml++-2.6 >= 2.10.0)
+AC_SUBST(LIBXML_CFLAGS)
+AC_SUBST(LIBXML_LIBS)
+
+
+
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+
+AC_CONFIG_FILES([Makefile]
+                [src/Makefile])
+
+AC_OUTPUT
