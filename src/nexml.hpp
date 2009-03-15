@@ -2,7 +2,7 @@
 #define NEXML_HPP_
 #include <vector>
 #include "otus.hpp"
-#include "matrix.hpp"
+#include "characters.hpp"
 #include "tree.hpp"
 #include "network.hpp"
 
@@ -22,13 +22,13 @@ namespace NeXML {
     Otus* getotus( )const{ return otus_; }
     /**
      */
-    void addmatrix( Matrix* matrix );
+    void addmatrix( Characters* matrix );
     /**
      */
-    unsigned int getnummatrices()const{ return  matrices_.size(); }
+    unsigned int getnummatrices()const{ return  characters_.size(); }
     /**
      */
-    Matrix* getmatrix( unsigned int mat )const{ return matrices_.at( mat ); }
+    Characters* getmatrix( unsigned int mat )const{ return characters_.at( mat ); }
     /**
      */
     void addtree( Tree* tree );
@@ -47,9 +47,10 @@ namespace NeXML {
     /**
      */
     Network* getnetwork( unsigned int net )const{ return networks_.at( net ); }
+    friend std::ostream& operator<<(std::ostream& out, const Nexml& rhs);
   private:
     Otus* otus_;
-    std::vector< Matrix* > matrices_;
+    std::vector< Characters* > characters_;
     std::vector< Tree* > trees_;
     std::vector< Network* > networks_;
   };

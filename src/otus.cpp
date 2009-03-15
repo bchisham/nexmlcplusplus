@@ -26,3 +26,17 @@ Otu* Otus::getotu( Glib::ustring id )const{
  // }
   return ret;
 }
+
+std::ostream& NeXML::operator<<( std::ostream& out, const Otus& rhs){
+  out << "<otus id=\"" << rhs.id_ << "\">\n";
+  for ( vector< Otu* >::const_iterator i = rhs.otus_.begin(); i != rhs.otus_.end(); ++i){
+      out << *i;
+  }
+  out << "</otus>\n";
+  return out;
+}
+std::ostream& NeXML::operator<<( std::ostream& out, const Otus* rhs){
+  if (rhs){ out << *rhs; }
+  return out;
+}
+
