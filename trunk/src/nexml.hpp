@@ -5,7 +5,7 @@
 #include "characters.hpp"
 #include "tree.hpp"
 #include "network.hpp"
-
+#include "annotation.hpp"
 
 namespace NeXML {
   /**
@@ -28,7 +28,7 @@ namespace NeXML {
     unsigned int getnummatrices()const{ return  characters_.size(); }
     /**
      */
-    Characters* getmatrix( unsigned int mat )const{ return characters_.at( mat ); }
+    Characters* getmatrix( unsigned int mat )const{ return mat < characters_.size() ? characters_.at( mat ) : NULL ; }
     /**
      */
     void addtree( Tree* tree );
@@ -37,7 +37,7 @@ namespace NeXML {
     unsigned int getnumtrees()const{ return trees_.size(); }
     /**
      */
-    Tree* gettree( unsigned int tree )const{ return trees_.at( tree ); }
+    Tree* gettree( unsigned int tree )const{ return tree < trees_.size() ? trees_.at( tree ) : NULL; }
     /**
      */
     void addnetwork( Network* network );
@@ -47,12 +47,18 @@ namespace NeXML {
     /**
      */
     Network* getnetwork( unsigned int net )const{ return networks_.at( net ); }
+
+    unsigned int getnumannotations()const{ return annotations_.size(); }
+    void addannotation( Annotation* ann );
+    Annotation* getannotation(unsigned int i)const{ i < annotations_.size() ? annotations_.at( i ) : NULL ; }
+
     friend std::ostream& operator<<(std::ostream& out, const Nexml& rhs);
   private:
     Otus* otus_;
     std::vector< Characters* > characters_;
     std::vector< Tree* > trees_;
     std::vector< Network* > networks_;
+    std::vector< Annotation* > annotations_;
   };
 
 }
