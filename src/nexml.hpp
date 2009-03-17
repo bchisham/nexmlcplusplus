@@ -10,7 +10,7 @@
 namespace NeXML {
   /**
    */
-  class Nexml {
+  class Nexml : public Annotable {
   public:
     Nexml();
     ~Nexml();
@@ -46,11 +46,11 @@ namespace NeXML {
     unsigned int getnumnetworks()const{ return networks_.size(); }
     /**
      */
-    Network* getnetwork( unsigned int net )const{ return networks_.at( net ); }
+Network* getnetwork( unsigned int net )const{ return networks_.at( net ); }
 
-    unsigned int getnumannotations()const{ return annotations_.size(); }
-    void addannotation( Annotation* ann );
-    Annotation* getannotation(unsigned int i)const{ i < annotations_.size() ? annotations_.at( i ) : NULL ; }
+    //unsigned int getnumannotations()const{ return annotations_.size(); }
+    //void addannotation( Annotation* ann );
+   // Annotation* getannotation(unsigned int i)const{ i < annotations_.size() ? annotations_.at( i ) : NULL ; }
 
     friend std::ostream& operator<<(std::ostream& out, const Nexml& rhs);
   private:
@@ -58,7 +58,7 @@ namespace NeXML {
     std::vector< Characters* > characters_;
     std::vector< Tree* > trees_;
     std::vector< Network* > networks_;
-    std::vector< Annotation* > annotations_;
+    //std::vector< Annotation* > annotations_;
   };
 
 }
