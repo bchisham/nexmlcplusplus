@@ -1,4 +1,5 @@
 #include "otus.hpp"
+#include "tags.hpp"
 using namespace NeXML;
 using namespace std;
 
@@ -14,6 +15,8 @@ void Otus::addotu( Otu* otu ){
   if ( otu ){
     otus_.push_back( otu );
     otus_by_id_[ otu->getid() ] = otu;
+    //update the id as elements are added to the set.
+    id_.setid( id_.getid() + otu->getid() );
   }
   return;
 }
@@ -28,11 +31,11 @@ Otu* Otus::getotu( Glib::ustring id )const{
 }
 
 std::ostream& NeXML::operator<<( std::ostream& out, const Otus& rhs){
-  out << "<otus id=\"" << rhs.id_ << "\">\n";
+  out << "<" << OTUS_TAG << " id=\"" << rhs.id_ << "\">\n";
   for ( vector< Otu* >::const_iterator i = rhs.otus_.begin(); i != rhs.otus_.end(); ++i){
       out << *i;
   }
-  out << "</otus>\n";
+  out << "</" << OTUS_TAG << ">\n";
   return out;
 }
 std::ostream& NeXML::operator<<( std::ostream& out, const Otus* rhs){
