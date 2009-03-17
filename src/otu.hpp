@@ -2,16 +2,18 @@
 #define OTU_HPP_
 #include "id.hpp"
 #include <glibmm/ustring.h>
+#include "annotation.hpp"
 namespace NeXML {
   /**
    * Represents an OTU definition.
    */
-  class Otu {
+  class Otu : public Annotable {
   public:
     /**
      * Initialize the otu.
      */
-    Otu(Glib::ustring& label):id_( label  ),
+    Otu(Glib::ustring& label):Annotable(),
+                              id_( label  ),
 			      label_( label ){}
     /**
      * Clean-up the otu.

@@ -58,6 +58,7 @@ static NeXML::Character*   process_char( xmlpp::Node* node );
 static NeXML::Cell* process_cell( xmlpp::Node* node );
 //process an annotation element.
 static NeXML::Annotation* process_annotation( xmlpp::Node* node );
+static NeXML::Otu* process_otu( xmlpp::Node* node );
 
 static const ustring ANNOTATION_TAG = "meta";
 static const ustring CHAR_TAG       = "char";
@@ -71,7 +72,7 @@ static const ustring NETWORK_TAG    = "network";
 static const ustring OTUS_TAG       = "otus";
 static const ustring OTU_TAG        = "otu";
 static const ustring TREE_TAG       = "tree";
-
+static const ustring SEQ_TAG        = "seq";
 
 
 
@@ -130,8 +131,33 @@ NeXML::Nexml* process_root( xmlpp::Node* node ){
   return NULL;
 }
 
-static NeXML::Otus* process_otus( xmlpp::Node* ){
-   
+static NeXML::Otus* process_otus( xmlpp::Node* node ){
+  if ( node ){
+    ustring id = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "id" )->get_value();
+    NeXML::Otus* ret = new NeXML::Otus();
+    xmlpp::Node::NodeList list = node->get_children();
+    for ( xmlpp::Node::NodeList::iterator it = list.begin(); it != list.end(); ++it ){
+       if ( (*it)->get_name() == OTU_TAG ){
+           ret->addotu( process_otu( *it ) );
+       }
+       else if ( (*it)->get_name() == ANNOTATION_TAG ){
+           ret->addannotation( process_annotation( *it ) );
+       }
+       else {
+       
+       }
+    }
+    return ret;
+  }
+  return NULL;
+}
+
+NeXML::Otu* process_otu( xmlpp::Node* node ){
+  if ( node ){
+     ustring label = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "label" )->get_value();
+     NeXML::Otu* ret = new NeXML::Otu( label );
+     return ret;
+  }
   return NULL;
 }
 
@@ -159,6 +185,8 @@ NeXML::Characters* process_characters( xmlpp::Node* node, NeXML::Otus* otus ){
   }
   return NULL; 
 }
+
+
 NeXML::Tree*      process_tree( xmlpp::Node* node ){ 
   if (node){
        
