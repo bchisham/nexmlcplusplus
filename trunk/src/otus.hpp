@@ -3,6 +3,7 @@
 
 #include "otu.hpp"
 #include "id.hpp"
+#include "annotation.hpp"
 #include <vector>
 #include <map>
 #include <glibmm/ustring.h>
@@ -11,7 +12,7 @@
 namespace NeXML {
   /**
    */
-  class Otus {
+  class Otus : public Annotable {
   public:
     /**
      */
@@ -29,7 +30,7 @@ namespace NeXML {
      */
     Otu* getotu( Glib::ustring id )const;
 
-    ID getid()const{ return id_; }
+    const Glib::ustring& getid()const{ return id_.getid(); }
 
     friend std::ostream& operator<<( std::ostream& out, const Otus& rhs);
     friend std::ostream& operator<<( std::ostream& out, const Otus* rhs);

@@ -2,7 +2,7 @@
 using namespace NeXML;
 using namespace std;
 
-Otus::Otus():otus_(), otus_by_id_(){}
+Otus::Otus():Annotable(),otus_(), otus_by_id_(){}
 
 Otus::~Otus(){
   for ( unsigned int i = 0; i < otus_.size(); ++i ){
