@@ -2,17 +2,17 @@
 #define CHARACTERS_HPP_
 #include <fstream>
 #include <glibmm/ustring.h>
-
+#include <vector>
 #include "otus.hpp"
 #include "matrix.hpp"
 #include "format.hpp"
 #include "id.hpp"
-
+#include "annotation.hpp"
 namespace NeXML {
   /**
    * Represents a NeXML characters block.
    */
-  class Characters {
+  class Characters : public Annotable {
     public:
       /**
        * Initilize the block
@@ -49,7 +49,7 @@ namespace NeXML {
       Glib::ustring type_;
       Format* format_;
       Matrix* matrix_;
-  };
+   };
 
 }
 

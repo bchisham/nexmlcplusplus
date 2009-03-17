@@ -58,9 +58,9 @@ std::ostream& NeXML::operator<<(std::ostream& out, const Nexml& rhs){
           out << *(rhs.otus_);
      }
      
-     for (vector< Annotation* >::const_iterator i = rhs.annotations_.begin(); i != rhs.annotations_.end(); ++i){
-        out << *i;
-     }
+     //for (vector< Annotation* >::const_iterator i = rhs.annotations_.begin(); i != rhs.annotations_.end(); ++i){
+     //   out << *i;
+     //}
 
      for ( vector< Characters* >::const_iterator i = rhs.characters_.begin(); i != rhs.characters_.end(); ++i){
           out << *i;
