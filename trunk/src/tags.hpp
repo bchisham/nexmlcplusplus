@@ -1,6 +1,13 @@
 #ifndef TAGS_HPP_
 #define TAGS_HPP_
-#include <glibmm/Glib::ustring.h>
+#include <glibmm/ustring.h>
+
+/*
+ * Brandon Chisham
+ * 16 March 2009
+ * Named constants for tags used in a NeXML file.
+ */
+
 namespace NeXML {
 
  const Glib::ustring ANNOTATION_TAG = "meta";

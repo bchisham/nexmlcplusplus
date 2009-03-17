@@ -92,19 +92,19 @@ NeXML::Nexml* process_root( xmlpp::Node* node ){
      xmlpp::Node::NodeList list = node->get_children();
      for (xmlpp::Node::NodeList::iterator it = list.begin(); it != list.end(); ++it ){
          //process children.
-         if ((*it)->get_name() == OTUS_TAG){
+         if ((*it)->get_name() == NeXML::OTUS_TAG){
             //add the otus block to the document.
             ret->setotus( process_otus( *it ) );
-         } else if ((*it)->get_name() == CHARACTERS_TAG ){
+         } else if ((*it)->get_name() == NeXML::CHARACTERS_TAG ){
             //add the matrix and attached characters and states definitions
             ret->addmatrix( process_characters( *it, ret->getotus() ) );
-         } else if ((*it)->get_name() == TREE_TAG ){
+         } else if ((*it)->get_name() == NeXML::TREE_TAG ){
             //add the tree. 
             ret->addtree( process_tree( *it ));
-         } else if ((*it)->get_name() == NETWORK_TAG ){
+         } else if ((*it)->get_name() == NeXML::NETWORK_TAG ){
            //add the network.
            ret->addnetwork( process_network( *it ));
-         } else if ((*it)->get_name() == ANNOTATION_TAG ){
+         } else if ((*it)->get_name() == NeXML::ANNOTATION_TAG ){
             //add the annotation.
             ret->addannotation( process_annotation( *it ) );
          } else {
@@ -123,10 +123,10 @@ static NeXML::Otus* process_otus( xmlpp::Node* node ){
     NeXML::Otus* ret = new NeXML::Otus();
     xmlpp::Node::NodeList list = node->get_children();
     for ( xmlpp::Node::NodeList::iterator it = list.begin(); it != list.end(); ++it ){
-       if ( (*it)->get_name() == OTU_TAG ){
+       if ( (*it)->get_name() == NeXML::OTU_TAG ){
            ret->addotu( process_otu( *it ) );
        }
-       else if ( (*it)->get_name() == ANNOTATION_TAG ){
+       else if ( (*it)->get_name() == NeXML::ANNOTATION_TAG ){
            ret->addannotation( process_annotation( *it ) );
        }
        else {
@@ -156,12 +156,12 @@ NeXML::Characters* process_characters( xmlpp::Node* node, NeXML::Otus* otus ){
     xmlpp::Node::NodeList list = node->get_children();
     //process the children
     for ( xmlpp::Node::NodeList::iterator it = list.begin(); it != list.end(); ++it ){
-      if ( (*it)->get_name() == FORMAT_TAG ){
+      if ( (*it)->get_name() == NeXML::FORMAT_TAG ){
          ret->setformat( process_format( *it ) );
-      } else if ( (*it)->get_name() == MATRIX_TAG ){
+      } else if ( (*it)->get_name() == NeXML::MATRIX_TAG ){
          ret->setmatrix( process_matrix( *it ) );
          
-      } else if ( (*it)->get_name() == ANNOTATION_TAG ){
+      } else if ( (*it)->get_name() == NeXML::ANNOTATION_TAG ){
           ret->addannotation( process_annotation( *it ) );
       } else {
          std::cerr << "Unknown element: " << (*it)->get_name() << std::endl;
