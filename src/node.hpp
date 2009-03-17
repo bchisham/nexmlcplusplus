@@ -4,7 +4,7 @@
 #include <glibmm/ustring.h>
 #include "id.hpp"
 #include "annotation.hpp"
-
+#include <fstream>
 namespace NeXML {
   /**
    * Represents a node in a NeXML document
@@ -31,6 +31,12 @@ namespace NeXML {
      * See if the node is the root.
      */
      bool isroot()const{ return isroot_; }
+    /**
+     * Declare the node to be a root node.
+     */
+     void setroot(bool root){ isroot_ = root;}
+     friend std::ostream& operator<<( std::ostream& out, const Node& rhs );
+     friend std::ostream& operator<<( std::ostream& out, const Node* rhs );
   private:
     ID id_;
     Glib::ustring otu_;
