@@ -19,6 +19,7 @@
 #include "../state.hpp"
 #include "../states.hpp"
 #include "../tree.hpp"
+#include "../tags.hpp"
 
 using namespace std;
 using namespace Glib;
@@ -59,21 +60,6 @@ static NeXML::Cell* process_cell( xmlpp::Node* node );
 //process an annotation element.
 static NeXML::Annotation* process_annotation( xmlpp::Node* node );
 static NeXML::Otu* process_otu( xmlpp::Node* node );
-
-static const ustring ANNOTATION_TAG = "meta";
-static const ustring CHAR_TAG       = "char";
-static const ustring CHARACTERS_TAG = "characters";
-static const ustring CELL_TAG       = "cell";
-static const ustring EDGE_TAG       = "edge";
-static const ustring FORMAT_TAG     = "format";
-static const ustring MATRIX_TAG     = "matrix";
-static const ustring NODE_TAG       = "node";
-static const ustring NETWORK_TAG    = "network";
-static const ustring OTUS_TAG       = "otus";
-static const ustring OTU_TAG        = "otu";
-static const ustring TREE_TAG       = "tree";
-static const ustring SEQ_TAG        = "seq";
-
 
 
 NeXML::Nexml* NeXML::DOM_PARSER::parser( const Glib::ustring& src ){
