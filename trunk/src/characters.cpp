@@ -3,10 +3,12 @@
 using namespace NeXML;
 using namespace std;
 
-Characters::Characters(Glib::ustring t, Otus* o, Format* f, Matrix* m):type_(t),
-                                                               otus_(o),
-                                                               format_(f), 
-                                                               matrix_(m){}
+Characters::Characters(Glib::ustring t, Otus* o, Format* f, Matrix* m):Annotable(),
+                                                                       Identifiable( t + o->getid() ),
+                                                                       type_(t),
+                                                                       otus_(o),
+                                                                       format_(f), 
+                                                                       matrix_(m){}
 Characters::~Characters(){
    delete format_;
    delete matrix_;
@@ -26,7 +28,7 @@ void Characters::setmatrix( Matrix* nmatrix ){
 
 std::ostream& NeXML::operator<<(std::ostream& out, const Characters& rhs ){
   out << "<characters ";
-  out << "id=\"" << rhs.id_ << "\" ";
+  out << "id=\"" << rhs.getid() << "\" ";
   out << "xsi:type=\"" << rhs.type_ << "\" ";
   out << "otus=" << rhs.otus_->getid() << ">\n";
   

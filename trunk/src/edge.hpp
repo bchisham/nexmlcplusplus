@@ -10,15 +10,16 @@ namespace NeXML {
   /**
    * Edge represents a single edge in Tree or Network.
    */
-  class Edge : public Annotable {
+  class Edge : public Annotable, public Identifiable {
   public:
     /**
      * Initialize the edge with the specified source and target nodes.
      */
-    Edge( const Node* src, const Node* target):id_( ),
-                                   src_(src), 
-                                   target_(target){ updateid();}
-    const Glib::ustring& getid()const{ return id_.getid(); }
+    Edge( const Node* src, const Node* target):Annotable(), 
+                                               Identifiable(),
+                                               src_(src), 
+                                               target_(target){ updateid();}
+    //const Glib::ustring& getid()const{ return id_.getid(); }
     /**
      * Change the source node id.
      */
@@ -43,7 +44,7 @@ namespace NeXML {
      */
     void updateid();
   private:
-    ID id_;
+    //ID id_;
     const Node* src_;
     const Node* target_;
   };

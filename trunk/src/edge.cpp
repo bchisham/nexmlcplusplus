@@ -13,7 +13,8 @@ void Edge::settarget( const Node* target ){
 }
 
 void Edge::updateid(){
-    id_.setid( src_->getid() + target_->getid() );
+    //Glib::ustring nid = 
+    dynamic_cast<Identifiable*>(this)->setid( src_->getid() + target_->getid() );
 }
 
 

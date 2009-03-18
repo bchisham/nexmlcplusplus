@@ -6,41 +6,46 @@
 #include "node.hpp"
 #include "edge.hpp"
 #include "annotation.hpp"
-
+#include "id.hpp"
 namespace NeXML {
   /**
-   *
+   * Represents a network/tree 
    */
-  class Network : public Annotable {
+  class Network : public Annotable,
+                  public Identifiable {
   public:
     /**
      *
      */
-    Network():nodes_(), edges_by_id_(), edges_(){}
+    Network():Annotable(), 
+              Identifiable(), 
+              nodes_(), 
+              edges_by_id_(), 
+              edges_(){}
     /**
-     *
+     * Clean-up
      */
     ~Network();
     /**
      *
      */
-    Node* getnode( Glib::ustring& id );
+    Node* getnode(const  Glib::ustring& id );
     /**
      *
      */
-    void addnode(  Node* node );
+    void addnode( const Node* node );
     /**
      *
      */
-    Edge* getedge( Glib::ustring& id );
+    Edge* getedge( const Glib::ustring& id );
     /**
      *
      */
-    void addedge( Edge* );
+    void addedge( const Edge* );
   protected:  
-    std::map< Glib::ustring, Node* > nodes_;
-    std::map< Glib::ustring, Edge* > edges_by_id_;
-    std::vector< Edge* > edges_;
+    std::vector< const Node* > nodes_;
+    std::map< Glib::ustring, const Edge* > edges_by_id_;
+    std::vector< const Edge* > edges_;
   };
 }
 

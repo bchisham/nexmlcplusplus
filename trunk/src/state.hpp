@@ -5,18 +5,23 @@
 #include <glibmm/ustring.h>
 
 #include "id.hpp"
+#include "annotation.hpp"
 namespace NeXML {
   /**
    * @author Brandon Chisham
    * @date March 15, 2009
    * State represents a state definition.
    */
-  class State {
+  class State : public Annotable, 
+                public Identifiable {
   public:
     /**
      * Initialize the state
      */
-    State(Glib::ustring label, Glib::ustring symbol):id_(label), label_(label), symbol_(symbol){}
+    State( const Glib::ustring& label, const Glib::ustring& symbol):Annotable(), 
+                                                     Identifiable( label + symbol ), 
+                                                     label_(label), 
+                                                     symbol_(symbol){}
     /**
      * Cleanup the state
      */
@@ -24,11 +29,15 @@ namespace NeXML {
     /**
      * Set the label.
      */
-    void setlabel( Glib::ustring l ){ label_ = l; id_.setid( l ); }
+    void setlabel( const Glib::ustring& l ){ label_ = l; this->setid( l + symbol_ ); }
     /**
      * Get the state label.
      */
     Glib::ustring getlabel()const{ return label_; }
+    /**
+     * Set the symbol. 
+     */
+    void setsymbol( const Glib::ustring& s){ symbol_ = s; this->setid( label_ + s ); }
     /**
      * Get the state symbol.
      */
@@ -39,7 +48,7 @@ namespace NeXML {
     friend std::ostream& operator<<( std::ostream& out, const State& rhs);
     friend std::ostream& operator<<( std::ostream& out, const State* rhs);
   private:
-    ID id_;
+    //ID id_;
     Glib::ustring label_;
     Glib::ustring symbol_;
   };
