@@ -3,7 +3,7 @@
 using namespace NeXML;
 using namespace std;
 
-Otus::Otus():Annotable(),otus_(), otus_by_id_(){}
+Otus::Otus():Annotable(),Identifiable(),otus_(), otus_by_id_(){}
 
 Otus::~Otus(){
   for ( unsigned int i = 0; i < otus_.size(); ++i ){
@@ -16,7 +16,7 @@ void Otus::addotu( Otu* otu ){
     otus_.push_back( otu );
     otus_by_id_[ otu->getid() ] = otu;
     //update the id as elements are added to the set.
-    id_.setid( id_.getid() + otu->getid() );
+    this->setid( this->getid() + otu->getid() );
   }
   return;
 }
@@ -31,7 +31,7 @@ Otu* Otus::getotu( Glib::ustring id )const{
 }
 
 std::ostream& NeXML::operator<<( std::ostream& out, const Otus& rhs){
-  out << "<" << OTUS_TAG << " id=\"" << rhs.id_ << "\">\n";
+  out << "<" << OTUS_TAG << " id=\"" << rhs.getid() << "\">\n";
   for ( vector< Otu* >::const_iterator i = rhs.otus_.begin(); i != rhs.otus_.end(); ++i){
       out << *i;
   }

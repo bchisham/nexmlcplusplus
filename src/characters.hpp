@@ -12,7 +12,8 @@ namespace NeXML {
   /**
    * Represents a NeXML characters block.
    */
-  class Characters : public Annotable {
+  class Characters : public Annotable, 
+                     public Identifiable {
     public:
       /**
        * Initilize the block
@@ -44,7 +45,7 @@ namespace NeXML {
       friend std::ostream& operator<<(std::ostream& out, const Characters& rhs );
       friend std::ostream& operator<<(std::ostream& out, const Characters* rhs );
     private:
-      ID id_;
+      //ID id_;
       Otus* otus_;
       Glib::ustring type_;
       Format* format_;

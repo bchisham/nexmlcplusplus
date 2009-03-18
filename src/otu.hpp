@@ -8,13 +8,13 @@ namespace NeXML {
   /**
    * Represents an OTU definition.
    */
-  class Otu : public Annotable {
+  class Otu : public Annotable, public Identifiable {
   public:
     /**
      * Initialize the otu.
      */
     Otu(Glib::ustring& label):Annotable(),
-                              id_( label  ),
+                              Identifiable( label ),
 			      label_( label ){}
     /**
      * Clean-up the otu.
@@ -23,7 +23,7 @@ namespace NeXML {
     /**
      * Get the OTU id.
      */
-    Glib::ustring getid()const{ return id_.getid();}
+    //Glib::ustring getid()const{ return id_.getid();}
     /**
      * Get the OTU label.
      */
@@ -43,7 +43,7 @@ namespace NeXML {
     friend std::ostream& operator<<( std::ostream& out, const Otu& rhs );
     friend std::ostream& operator<<( std::ostream& out, const Otu* rhs );
   private:
-    ID id_;
+    //ID id_;
     Glib::ustring label_;
     
   };

@@ -4,7 +4,7 @@ using namespace NeXML;
 Otu::~Otu(){}
 
 std::ostream& NeXML::operator<<( std::ostream& out, const Otu& rhs ){
-  out << "<" << OTU_TAG << " id=\"" <<rhs.id_ << "\" label=\"" << rhs.label_ << "\"/>\n";
+  out << "<" << OTU_TAG << " id=\"" << rhs.getid() << "\" label=\"" << rhs.label_ << "\"/>\n";
   return out;
 }
 

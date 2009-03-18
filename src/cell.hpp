@@ -4,6 +4,8 @@
 
 #include "character.hpp"
 #include "state.hpp"
+#include "annotation.hpp"
+#include "id.hpp"
 /*
  */
 namespace NeXML {
@@ -12,12 +14,16 @@ namespace NeXML {
    * @date March 15, 2009
    * Cell represents a single cell element in a matrix.
    */
-  class Cell {
+  class Cell:public Annotable,
+             public Identifiable {
   public:
     /**
      * Initialize the cell
      */
-    Cell( Character* ch, State* state ):char_(ch), state_(state){}
+    Cell( Character* ch, State* state ):Annotable(), 
+                                        Identifiable(), 
+                                        char_(ch), 
+                                        state_(state){}
     /**
      * Cleanup
      */

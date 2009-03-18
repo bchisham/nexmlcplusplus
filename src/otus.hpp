@@ -12,7 +12,7 @@
 namespace NeXML {
   /**
    */
-  class Otus : public Annotable {
+  class Otus : public Annotable, public Identifiable  {
   public:
     /**
      */
@@ -30,12 +30,12 @@ namespace NeXML {
      */
     Otu* getotu( Glib::ustring id )const;
 
-    const Glib::ustring& getid()const{ return id_.getid(); }
+    //const Glib::ustring& getid()const{ return id_.getid(); }
 
     friend std::ostream& operator<<( std::ostream& out, const Otus& rhs);
     friend std::ostream& operator<<( std::ostream& out, const Otus* rhs);
   private:
-    ID id_;
+   // ID id_;
     std::vector< Otu* > otus_;
     std::map< Glib::ustring, Otu* > otus_by_id_;
   };

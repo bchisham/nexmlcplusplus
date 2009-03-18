@@ -2,7 +2,7 @@
 
 
 std::ostream& NeXML::operator<<( std::ostream& out, const State& rhs){
-  out << "<state id=\"" << rhs.id_ 
+  out << "<state id=\"" << rhs.getid() 
       << "\" label=\"" << rhs.label_ 
       << "\" symbol=\"" << rhs.symbol_ << "\"/>\n";
   return out;
