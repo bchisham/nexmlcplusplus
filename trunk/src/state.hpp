@@ -2,8 +2,9 @@
 #define STATE_HPP_
 
 #include <fstream>
+#include <set>
 #include <glibmm/ustring.h>
-
+#include <algorithm>
 #include "id.hpp"
 #include "annotation.hpp"
 namespace NeXML {
@@ -47,10 +48,82 @@ namespace NeXML {
      */
     friend std::ostream& operator<<( std::ostream& out, const State& rhs);
     friend std::ostream& operator<<( std::ostream& out, const State* rhs);
+    //Comparable interface
+    const bool operator==( const State& rhs )const{ return this ==&rhs || label_ == rhs.label_; }
+    const bool operator<(const State& rhs)const{ return label_ < rhs.label_; }
+    //convenience for the state set.
+    friend const bool operator==( const State& lhs, const Glib::ustring& rhs){
+        return lhs.label_ == rhs;
+    }
+    friend const bool operator==( const State* lhs, const Glib::ustring& rhs){
+        if (lhs){ return *lhs == rhs; }
+        return false;
+    }
+    friend const bool operator==( const Glib::ustring& rhs, const State* lhs){
+        if (lhs){ return *lhs == rhs; }
+        return false;
+    }
+
+    friend const bool operator<( const State* lhs, const Glib::ustring& rhs){
+        if (lhs){ return lhs->label_ < rhs; }
+        return false;
+    }
+    friend const bool operator<( const Glib::ustring& rhs, const State* lhs ){
+        if (lhs){ return lhs->label_ < rhs; }
+        return false;
+    }
+
   private:
     //ID id_;
     Glib::ustring label_;
     Glib::ustring symbol_;
+  };
+
+  /**
+   *
+   */
+  class StateSet {
+  public:
+    /**
+     *
+     */
+    StateSet():members_(){}
+    /**
+     *
+     */
+    virtual ~StateSet();
+    /**
+     *
+     */
+    void addstate( const State* state){ members_.insert( state ); }
+    /**
+     *
+     */
+    const bool hasstate( const Glib::ustring& label){ 
+      return binary_search(members_.begin(), members_.end(), label); 
+    }
+  private:
+    std::set< const State* > members_;
+  };
+
+  class UncertainState : public State,
+                         private StateSet {
+   public:
+     UncertainState(const Glib::ustring& label, 
+                    const Glib::ustring& symbol):State(label, symbol),
+                                                 StateSet(){}
+     ~UncertainState(){}
+   private:
+  };
+
+  class PolymorphicState : public State,
+                           private StateSet {
+   public:
+     PolymorphicState(const Glib::ustring& label, 
+                      const Glib::ustring& symbol):State(label, symbol),
+                                                   StateSet(){}
+     ~PolymorphicState(){}
+   private:
   };
 
 }

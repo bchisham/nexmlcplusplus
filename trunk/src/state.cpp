@@ -1,5 +1,5 @@
 #include "state.hpp"
-
+using namespace NeXML;
 
 std::ostream& NeXML::operator<<( std::ostream& out, const State& rhs){
   out << "<state id=\"" << rhs.getid() 
@@ -13,3 +13,8 @@ std::ostream& NeXML::operator<<( std::ostream& out, const State* rhs){
   return out;
 }
 
+StateSet::~StateSet(){
+  for (std::set< const State* >::iterator i = members_.begin(); i != members_.end(); ++i){
+      delete *i;
+  }
+}
