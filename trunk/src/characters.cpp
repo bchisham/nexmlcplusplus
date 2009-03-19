@@ -26,20 +26,24 @@ void Characters::setmatrix( Matrix* nmatrix ){
   return;
 }
 
-std::ostream& NeXML::operator<<(std::ostream& out, const Characters& rhs ){
-  out << "<characters ";
-  out << "id=\"" << rhs.getid() << "\" ";
-  out << "xsi:type=\"" << rhs.type_ << "\" ";
-  out << "otus=" << rhs.otus_->getid() << ">\n";
-  
-  out << rhs.format_;
-  out << rhs.matrix_;
 
+std::ostream& Characters::serialize( std::ostream& out )const{
+  out << "<characters ";
+  out << "id=\"" << getid() << "\" ";
+  out << "xsi:type=\"" << type_ << "\" ";
+  out << "otus=" << otus_->getid() << ">\n";
+  out << dynamic_cast< const Annotable* >( this );
+  out << format_;
+  out << matrix_;
   out << "</characters>\n";
   return out;
 }
+
+std::ostream& NeXML::operator<<(std::ostream& out, const Characters& rhs ){
+    return rhs.serialize( out );
+}
 std::ostream& NeXML::operator<<(std::ostream& out, const Characters* rhs ){
-  if (rhs){ out << *rhs; }
+  if (rhs){ rhs->serialize( out ); }
   return out;
 }
 

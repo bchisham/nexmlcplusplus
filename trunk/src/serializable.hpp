@@ -9,7 +9,7 @@ namespace NeXML {
     */
    class Serializable {
    public:
-     virtual  std::ostream& serialize( std::ostream& out )const=0;
+     std::ostream& serialize( std::ostream& out )const{ return out; }
    };
 
 }

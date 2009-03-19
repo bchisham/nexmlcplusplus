@@ -3,62 +3,65 @@
 #include <vector>
 #include "otus.hpp"
 #include "characters.hpp"
-#include "tree.hpp"
+//#include "tree.hpp"
 #include "network.hpp"
 #include "annotation.hpp"
+#include "serializable.hpp"
+#include "trees.hpp"
 
 namespace NeXML {
   /**
+   * Represents a Nexml document
    */
-  class Nexml : public Annotable {
+  class Nexml : public Annotable,
+                public Serializable {
   public:
     Nexml();
     ~Nexml();
     /**
+     * (re)set the otus block. 
      */
     void setotus( Otus* otus );
     /**
+     * get the otus block
      */
     Otus* getotus( )const{ return otus_; }
     /**
+     *  add a new matrix (including state and character definitions).
      */
     void addmatrix( Characters* matrix );
     /**
+     *  Get the number of matrices in the document.
      */
     unsigned int getnummatrices()const{ return  characters_.size(); }
     /**
+     * Get the specified matrix (including state and character definitions).
      */
-    Characters* getmatrix( unsigned int mat )const{ return mat < characters_.size() ? characters_.at( mat ) : NULL ; }
+    const Characters* getmatrix( unsigned int mat )const{ return mat < characters_.size() ? characters_.at( mat ) : NULL ; }
     /**
+     * Get the trees block
      */
-    void addtree( Tree* tree );
+    const Trees* gettrees()const{ return trees_;}
     /**
+     * (re)set the trees block.
      */
-    unsigned int getnumtrees()const{ return trees_.size(); }
+    void settrees( Trees* t );
     /**
+     * Serialize
      */
-    Tree* gettree( unsigned int tree )const{ return tree < trees_.size() ? trees_.at( tree ) : NULL; }
+    friend std::ostream& operator<<( std::ostream& out, const Nexml& rhs );
     /**
+     * Serialize
      */
-    void addnetwork( Network* network );
+    friend std::ostream& operator<<( std::ostream& out, const Nexml* rhs );
     /**
+     * Serialize
      */
-    unsigned int getnumnetworks()const{ return networks_.size(); }
-    /**
-     */
-Network* getnetwork( unsigned int net )const{ return networks_.at( net ); }
-
-    //unsigned int getnumannotations()const{ return annotations_.size(); }
-    //void addannotation( Annotation* ann );
-   // Annotation* getannotation(unsigned int i)const{ i < annotations_.size() ? annotations_.at( i ) : NULL ; }
-
-    friend std::ostream& operator<<(std::ostream& out, const Nexml& rhs);
+    std::ostream& serialize( std::ostream& out )const;
   private:
     Otus* otus_;
+    Trees* trees_;
     std::vector< Characters* > characters_;
-    std::vector< Tree* > trees_;
-    std::vector< Network* > networks_;
-    //std::vector< Annotation* > annotations_;
   };
 
 }

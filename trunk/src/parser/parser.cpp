@@ -19,6 +19,7 @@
 #include "../state.hpp"
 #include "../states.hpp"
 #include "../tree.hpp"
+#include "../trees.hpp"
 #include "../tags.hpp"
 
 using namespace std;
@@ -32,7 +33,8 @@ static NeXML::Nexml* process_root( xmlpp::Node* node );
 static NeXML::Characters* process_characters( xmlpp::Node* node, NeXML::Otus* );
 
 static NeXML::Otus* process_otus( xmlpp::Node* );
-
+//process trees
+static NeXML::Trees*     process_trees( xmlpp::Node* node );
 //process a tree.
 static NeXML::Tree*      process_tree( xmlpp::Node* node );
 //process a network
@@ -98,12 +100,9 @@ NeXML::Nexml* process_root( xmlpp::Node* node ){
          } else if ((*it)->get_name() == NeXML::CHARACTERS_TAG ){
             //add the matrix and attached characters and states definitions
             ret->addmatrix( process_characters( *it, ret->getotus() ) );
-         } else if ((*it)->get_name() == NeXML::TREE_TAG ){
+         } else if ((*it)->get_name() == NeXML::TREES_TAG ){
             //add the tree. 
-            ret->addtree( process_tree( *it ));
-         } else if ((*it)->get_name() == NeXML::NETWORK_TAG ){
-           //add the network.
-           ret->addnetwork( process_network( *it ));
+            ret->settrees( process_trees( *it ));
          } else if ((*it)->get_name() == NeXML::ANNOTATION_TAG ){
             //add the annotation.
             ret->addannotation( process_annotation( *it ) );
@@ -172,6 +171,13 @@ NeXML::Characters* process_characters( xmlpp::Node* node, NeXML::Otus* otus ){
   return NULL; 
 }
 
+NeXML::Trees*     process_trees( xmlpp::Node* node ){
+    if ( node ){
+
+
+    }
+    return NULL;
+}
 
 NeXML::Tree*      process_tree( xmlpp::Node* node ){ 
   if (node){

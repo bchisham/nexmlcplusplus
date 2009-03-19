@@ -27,6 +27,7 @@ namespace NeXML {
  const Glib::ustring STATE_TAG      = "state";
  const Glib::ustring STATES_TAG     = "states";
  const Glib::ustring TREE_TAG       = "tree";
+ const Glib::ustring TREES_TAG      = "trees";
  const Glib::ustring UNCERT_TAG     = "uncertain_state_set";
  
 

@@ -8,12 +8,15 @@
 #include "format.hpp"
 #include "id.hpp"
 #include "annotation.hpp"
+#include "serializable.hpp"
+
 namespace NeXML {
   /**
    * Represents a NeXML characters block.
    */
   class Characters : public Annotable, 
-                     public Identifiable {
+                     public Identifiable,
+                     public Serializable {
     public:
       /**
        * Initilize the block
@@ -44,6 +47,7 @@ namespace NeXML {
        */
       friend std::ostream& operator<<(std::ostream& out, const Characters& rhs );
       friend std::ostream& operator<<(std::ostream& out, const Characters* rhs );
+      std::ostream& serialize( std::ostream& out )const;
     private:
       //ID id_;
       Otus* otus_;
