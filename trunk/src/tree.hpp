@@ -14,7 +14,7 @@ namespace NeXML {
   public:
     /**
      */
-    Tree():Network(){}
+    Tree(Glib::ustring label = "", Glib::ustring type ="" ):Network(label, type){}
     /**
      */
     ~Tree();

@@ -21,7 +21,7 @@ namespace NeXML {
       /**
        * Initilize the block
        */
-      Characters(Glib::ustring type, Otus* otus, Format* format = NULL, Matrix* matrix = NULL);
+      Characters(Glib::ustring type, const Otus* otus,const  Format* format = NULL, const Matrix* matrix = NULL);
       /**
        * Cleanup the block
        */
@@ -29,19 +29,19 @@ namespace NeXML {
       /**
        * Get the format element
        */
-      Format* getformat()const{return format_;}
+      const Format* getformat()const{return format_;}
       /**
        * Set the format element.
        */
-      void setformat(Format*);
+      void setformat(const Format*);
       /**
        * Get the matrix element.
        */
-      Matrix* getmatrix()const{return matrix_;}
+      const Matrix* getmatrix()const{return matrix_;}
       /**
        * Set the matrix element.
        */
-      void setmatrix(Matrix*);
+      void setmatrix(const Matrix*);
       /**
        * Write the characters block.
        */
@@ -50,10 +50,10 @@ namespace NeXML {
       std::ostream& serialize( std::ostream& out )const;
     private:
       //ID id_;
-      Otus* otus_;
+      const Otus* otus_;
       Glib::ustring type_;
-      Format* format_;
-      Matrix* matrix_;
+      const Format* format_;
+      const Matrix* matrix_;
    };
 
 }

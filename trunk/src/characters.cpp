@@ -3,24 +3,24 @@
 using namespace NeXML;
 using namespace std;
 
-Characters::Characters(Glib::ustring t, Otus* o, Format* f, Matrix* m):Annotable(),
-                                                                       Identifiable( t + o->getid() ),
-                                                                       type_(t),
-                                                                       otus_(o),
-                                                                       format_(f), 
-                                                                       matrix_(m){}
+Characters::Characters(Glib::ustring t, const Otus* o, const Format* f, const Matrix* m):Annotable(),
+                                                                                         Identifiable( t + o->getid() ),
+                                                                                         type_(t),
+                                                                                         otus_(o),
+                                                                                         format_(f), 
+                                                                                         matrix_(m){}
 Characters::~Characters(){
    delete format_;
    delete matrix_;
 }
 
-void Characters::setformat( Format* nformat ){
+void Characters::setformat( const  Format* nformat ){
   if (format_ && format_ != nformat){ delete format_; }
   format_ = nformat;
   return;
 }
 
-void Characters::setmatrix( Matrix* nmatrix ){
+void Characters::setmatrix( const Matrix* nmatrix ){
   if (matrix_ && matrix_ != nmatrix){ delete matrix_; }
   matrix_ = nmatrix;
   return;
