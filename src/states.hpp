@@ -2,24 +2,50 @@
 #define STATES_HPP_
 
 #include <fstream>
-#include <vector>
+#include <set>
 
 #include "id.hpp"
+#include "annotation.hpp"
+#include "serializable.hpp"
+
 #include "state.hpp"
 
 namespace NeXML {
-
-  class States {
+  /**
+   * Represents a NeXML states block
+   */
+  class States : public Annotable, 
+                 public Identifiable,
+                 public Serializable {
   public:
-    States():id_(),states_(){}
+    /**
+     * Create an empty block
+     */
+    States(const Glib::ustring& id=""):Annotable(), 
+                                       Identifiable( id ), 
+                                       Serializable(),
+                                       states_(){}
+    /**
+     * Clean-up.
+     */
     ~States();
-    void addstate( State* state );
-    State* getstate( unsigned int i )const;
-    friend std::ostream& operator<<( std::ostream& out, const States& rhs );
-    friend std::ostream& operator<<( std::ostream& out, const States* rhs );
+    /**
+     * Add a new state to the block
+     */
+    void addstate( const State* state );
+    /**
+     * Get the specified state.
+     */
+    const State* getstate( const Glib::ustring&  i )const;
+    /**
+     * Serialize the block.
+     */
+    friend std::ostream& operator<<( std::ostream& out, const States& rhs ){ return rhs.serialize( out ); }
+    friend std::ostream& operator<<( std::ostream& out, const States* rhs ){ if (rhs){ rhs->serialize( out );}  return out; }
+    std::ostream& serialize( std::ostream& out )const;
   private:
-    ID id_;
-    std::vector< State* > states_;
+    //ID id_;
+    std::set< const State* > states_;
   };
 
 }
