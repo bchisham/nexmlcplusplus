@@ -3,13 +3,12 @@
 using namespace NeXML;
 Otu::~Otu(){}
 
-std::ostream& NeXML::operator<<( std::ostream& out, const Otu& rhs ){
-  out << "<" << OTU_TAG << " id=\"" << rhs.getid() << "\" label=\"" << rhs.label_ << "\"/>\n";
+std::ostream& Otu::serialize( std::ostream& out )const{
+  out << "<" << OTU_TAG << " id=\"" << getid() << "\" label=\"" << label_ << "\">\n";
+  //print annotations. 
+  out << dynamic_cast< const Annotable* >( this );
+  out << "</" << OTU_TAG << ">\n";
   return out;
 }
 
-std::ostream& NeXML::operator<<( std::ostream& out, const Otu* rhs ){
-  if (rhs){ out << *rhs; }
-  return out;
-}
 

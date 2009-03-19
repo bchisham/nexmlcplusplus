@@ -4,11 +4,15 @@
 #include <glibmm/ustring.h>
 #include <fstream>
 #include "annotation.hpp"
+#include "serializable.hpp"
+
 namespace NeXML {
   /**
    * Represents an OTU definition.
    */
-  class Otu : public Annotable, public Identifiable {
+  class Otu : public Annotable,
+              public Identifiable,
+              public Serializable {
   public:
     /**
      * Initialize the otu.
@@ -19,7 +23,7 @@ namespace NeXML {
     /**
      * Clean-up the otu.
      */
-    ~Otu();
+    virtual ~Otu();
     /**
      * Get the OTU id.
      */
@@ -40,8 +44,9 @@ namespace NeXML {
     bool operator<( const Otu& rhs)const{
         return this->label_ < rhs.label_;
     }
-    friend std::ostream& operator<<( std::ostream& out, const Otu& rhs );
-    friend std::ostream& operator<<( std::ostream& out, const Otu* rhs );
+    friend std::ostream& operator<<( std::ostream& out, const Otu& rhs ){ return rhs.serialize( out ); }
+    friend std::ostream& operator<<( std::ostream& out, const Otu* rhs ){ if (rhs){ rhs->serialize( out ); } return out;}
+    virtual std::ostream& serialize( std::ostream& out )const;
   private:
     //ID id_;
     Glib::ustring label_;
