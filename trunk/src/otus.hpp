@@ -8,11 +8,11 @@
 #include <map>
 #include <glibmm/ustring.h>
 #include <fstream>
-
+#include "serializable.hpp"
 namespace NeXML {
   /**
    */
-  class Otus : public Annotable, public Identifiable  {
+  class Otus : public Annotable, public Identifiable, public Serializable  {
   public:
     /**
      */
@@ -32,8 +32,9 @@ namespace NeXML {
 
     //const Glib::ustring& getid()const{ return id_.getid(); }
 
-    friend std::ostream& operator<<( std::ostream& out, const Otus& rhs);
-    friend std::ostream& operator<<( std::ostream& out, const Otus* rhs);
+    friend std::ostream& operator<<( std::ostream& out, const Otus& rhs){ return rhs.serialize( out ); }
+    friend std::ostream& operator<<( std::ostream& out, const Otus* rhs){ if (rhs){ rhs->serialize( out ); } return out; }
+    std::ostream& serialize( std::ostream& out )const;
   private:
    // ID id_;
     std::vector< Otu* > otus_;

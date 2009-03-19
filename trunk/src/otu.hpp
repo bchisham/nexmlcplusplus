@@ -46,7 +46,7 @@ namespace NeXML {
     }
     friend std::ostream& operator<<( std::ostream& out, const Otu& rhs ){ return rhs.serialize( out ); }
     friend std::ostream& operator<<( std::ostream& out, const Otu* rhs ){ if (rhs){ rhs->serialize( out ); } return out;}
-    virtual std::ostream& serialize( std::ostream& out )const;
+    std::ostream& serialize( std::ostream& out )const;
   private:
     //ID id_;
     Glib::ustring label_;
