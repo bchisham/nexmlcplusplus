@@ -17,13 +17,18 @@ namespace NeXML {
  const Glib::ustring EDGE_TAG       = "edge";
  const Glib::ustring FORMAT_TAG     = "format";
  const Glib::ustring MATRIX_TAG     = "matrix";
+ const Glib::ustring MEMBER_TAG     = "member";
  const Glib::ustring NODE_TAG       = "node";
  const Glib::ustring NETWORK_TAG    = "network";
  const Glib::ustring OTUS_TAG       = "otus";
  const Glib::ustring OTU_TAG        = "otu";
- const Glib::ustring TREE_TAG       = "tree";
+ const Glib::ustring POLY_TAG       = "polymorphic_state_set";
  const Glib::ustring SEQ_TAG        = "seq";
-
+ const Glib::ustring STATE_TAG      = "state";
+ const Glib::ustring STATES_TAG     = "states";
+ const Glib::ustring TREE_TAG       = "tree";
+ const Glib::ustring UNCERT_TAG     = "uncertain_state_set";
+ 
 
 
 
