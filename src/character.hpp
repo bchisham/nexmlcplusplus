@@ -6,21 +6,34 @@
 
 #include "annotation.hpp"
 #include "id.hpp"
-
-
+#include "serializable.hpp"
+#include "states.hpp"
 namespace NeXML {
-
+  /**
+   * Represents a single character definition.
+   */
   class Character : public Annotable,
-                    public Identifiable {
+                    public Identifiable,
+                    public Serializable {
   public:
-    Character(const Glib::ustring& states):Annotable(),
-                                           Identifiable(states),
+    /**
+     * Initializes the character with the specified states block reference
+     */
+    Character(const States*& states):Annotable(),
+                                           Identifiable( "character" + states->getid()),
                                            states_( states ){}
+    /**
+     * Cleanup.
+     */
     ~Character(){}
+    /**
+     * Serialize.
+     */
     friend std::ostream& operator<<( std::ostream& out, const Character& rhs );
     friend std::ostream& operator<<( std::ostream& out, const Character* rhs );
+    std::ostream& serialize( std::ostream& out )const;
   private:
-    Glib::ustring states_;
+    const States* states_;
   };
 
 }

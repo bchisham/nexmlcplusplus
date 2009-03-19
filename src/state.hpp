@@ -75,7 +75,7 @@ namespace NeXML {
         if (lhs){ return lhs->label_ < rhs; }
         return false;
     }
-    virtual std::ostream& serialize( std::ostream& out )const;
+    std::ostream& serialize( std::ostream& out )const;
   private:
     //ID id_;
     Glib::ustring label_;
@@ -108,7 +108,7 @@ namespace NeXML {
     }
     friend std::ostream& operator<<( std::ostream& out, const StateSet& rhs){ return rhs.serialize( out ); }
     friend std::ostream& operator<<( std::ostream& out, const StateSet* rhs){ if (rhs){ rhs->serialize( out ); } return out; }
-    virtual std::ostream& serialize(std::ostream& out)const;
+    std::ostream& serialize(std::ostream& out)const;
   private:
     std::set< const State* > members_;
   };
@@ -138,7 +138,7 @@ namespace NeXML {
       * Serialize the state.
       */
      friend std::ostream& operator<<(std::ostream& out, const UncertainState* rhs );
-      virtual std::ostream& serialize( std::ostream& out )const;
+     std::ostream& serialize( std::ostream& out )const;
    private:
   };
   /**
@@ -169,7 +169,7 @@ namespace NeXML {
      /**
       * Serializable interface.
       */
-     virtual std::ostream& serialize( std::ostream& out )const;
+      std::ostream& serialize( std::ostream& out )const;
    private:
   };
 

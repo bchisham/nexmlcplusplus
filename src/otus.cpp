@@ -30,16 +30,14 @@ Otu* Otus::getotu( Glib::ustring id )const{
   return ret;
 }
 
-std::ostream& NeXML::operator<<( std::ostream& out, const Otus& rhs){
-  out << "<" << OTUS_TAG << " id=\"" << rhs.getid() << "\">\n";
-  for ( vector< Otu* >::const_iterator i = rhs.otus_.begin(); i != rhs.otus_.end(); ++i){
+
+std::ostream& Otus::serialize( std::ostream& out )const{
+  out << "<" << OTUS_TAG << " id=\"" << getid() << "\">\n";
+  out << dynamic_cast< const Annotable* >( this );
+  for ( vector< Otu* >::const_iterator i = otus_.begin(); i != otus_.end(); ++i){
       out << *i;
   }
   out << "</" << OTUS_TAG << ">\n";
-  return out;
-}
-std::ostream& NeXML::operator<<( std::ostream& out, const Otus* rhs){
-  if (rhs){ out << *rhs; }
   return out;
 }
 
