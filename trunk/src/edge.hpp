@@ -4,13 +4,14 @@
 #include "id.hpp"
 #include "annotation.hpp"
 #include "node.hpp"
+#include "serializable.hpp"
 #include <glibmm/ustring.h>
 
 namespace NeXML {
   /**
    * Edge represents a single edge in Tree or Network.
    */
-  class Edge : public Annotable, public Identifiable {
+  class Edge : public Annotable, public Identifiable, public Serializable {
   public:
     /**
      * Initialize the edge with the specified source and target nodes.
@@ -36,8 +37,24 @@ namespace NeXML {
      * Get the target node id.
      */
     const Node* gettarget()const{ return target_; }
+    /**
+     * Serialize
+     */
     friend std::ostream& operator<<( std::ostream& out, const Edge& rhs);
+    /**
+     * Serialize
+     */
     friend std::ostream& operator<<( std::ostream& out, const Edge* rhs);
+    /**
+     * Serialize
+     */
+    std::ostream& serialize( std::ostream& out )const;
+    /**
+     * Compare edges.
+     */
+    const bool operator==( const Edge& rhs )const{ return this == &rhs || this->getid() == rhs.getid(); }
+    const bool operator!=( const Edge& rhs )const{ return !( *this == rhs ); }
+    const bool operator<(  const Edge& rhs )const{ return this->getid() < rhs.getid(); }
   protected:
     /**
      * Update the edge id.
@@ -48,7 +65,34 @@ namespace NeXML {
     const Node* src_;
     const Node* target_;
   };
-  
+  /**
+   *
+   */
+  class Rootedge : public Edge, public Serializable {
+  public:
+     /**
+      *
+      */
+     Rootedge( const Node* target ):Edge( NULL, target ),Serializable(){}
+     /**
+      *
+      */
+     virtual ~Rootedge(){}
+     /**
+      * Serialize
+      */
+     friend std::ostream& operator<<( std::ostream& out, const Rootedge& rhs){ return rhs.serialize( out ); }
+     /**
+      * Serialize
+      */
+     friend std::ostream& operator<<( std::ostream& out, const Rootedge* rhs){ if (rhs) rhs->serialize( out ); return out;}
+     /**
+      * Serialize
+      */
+     std::ostream& serialize( std::ostream& out )const;
+  private:
+  };
+
 }
 
 #endif

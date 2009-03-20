@@ -24,6 +24,7 @@ namespace NeXML {
  const Glib::ustring OTU_TAG        = "otu";
  const Glib::ustring POLY_TAG       = "polymorphic_state_set";
  const Glib::ustring ROOTEDGE_TAG   = "rootedge";
+ const Glib::ustring ROW_TAG        = "row";
  const Glib::ustring SEQ_TAG        = "seq";
  const Glib::ustring STATE_TAG      = "state";
  const Glib::ustring STATES_TAG     = "states";

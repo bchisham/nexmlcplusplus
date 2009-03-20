@@ -4,12 +4,13 @@
 #include <vector>
 #include <fstream>
 #include "row.hpp"
+#include "annotation.hpp"
 
 namespace NeXML {
   /**
    * Represents a single matrix block in a NeXML file.
    */
-  class Matrix {
+  class Matrix : public Annotable {
   public:
     /**
      */

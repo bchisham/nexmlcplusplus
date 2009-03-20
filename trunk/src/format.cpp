@@ -1,19 +1,32 @@
 #include "format.hpp"
+#include "tags.hpp"
+
 using namespace NeXML;
 using namespace std;
 
-std::ostream& NeXML::operator<<( std::ostream& out, const Format& rhs ){
+void Format::setstates( const States* s ){
+   if (states_ && states_ != s ){ delete states_; }
+   states_ = s;
+   return;
+}
 
-  out << "<format>\n";
-  out << rhs.states_;
-  for (vector< Character* >::const_iterator i = rhs.chars_.begin(); i != rhs.chars_.end(); ++i){
+std::ostream& Format::serialize( std::ostream& out )const{
+  out << "<" << FORMAT_TAG << ">\n";
+  out << dynamic_cast< const Annotable* >( this );
+  out << states_;
+  for (vector< const Character* >::const_iterator i = chars_.begin(); i != chars_.end(); ++i){
      out << *i;
   }
-  out << "</format>\n";
+  out << "</" << FORMAT_TAG << ">\n";
 
+  return out;
+}
+
+std::ostream& NeXML::operator<<( std::ostream& out, const Format& rhs ){
+   return rhs.serialize( out );
 }
 std::ostream& NeXML::operator<<( std::ostream& out, const Format* rhs ){
-  if (rhs){ out << *rhs; }
+  if (rhs){ rhs->serialize( out ); }
   return out;
 }
 
