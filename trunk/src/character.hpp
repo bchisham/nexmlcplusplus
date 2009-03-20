@@ -19,9 +19,9 @@ namespace NeXML {
     /**
      * Initializes the character with the specified states block reference
      */
-    Character(const States*& states):Annotable(),
-                                           Identifiable( "character" + states->getid()),
-                                           states_( states ){}
+    Character(const States* states):Annotable(),
+                                    Identifiable( "character" + states->getid()),
+                                    states_( states ){}
     /**
      * Cleanup.
      */

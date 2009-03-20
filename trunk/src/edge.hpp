@@ -16,10 +16,11 @@ namespace NeXML {
     /**
      * Initialize the edge with the specified source and target nodes.
      */
-    Edge( const Node* src, const Node* target):Annotable(), 
+    Edge( const Node* src, const Node* target, Glib::ustring length ):Annotable(), 
                                                Identifiable(),
                                                src_(src), 
-                                               target_(target){ updateid();}
+                                               target_(target),
+                                               length_(length){ updateid();}
     //const Glib::ustring& getid()const{ return id_.getid(); }
     /**
      * Change the source node id.
@@ -37,6 +38,11 @@ namespace NeXML {
      * Get the target node id.
      */
     const Node* gettarget()const{ return target_; }
+    /**
+     * Get the edge length.
+     */
+    const Glib::ustring& getlength()const{ return length_; }
+
     /**
      * Serialize
      */
@@ -64,6 +70,7 @@ namespace NeXML {
     //ID id_;
     const Node* src_;
     const Node* target_;
+    Glib::ustring length_;
   };
   /**
    *
@@ -73,7 +80,7 @@ namespace NeXML {
      /**
       *
       */
-     Rootedge( const Node* target ):Edge( NULL, target ),Serializable(){}
+     Rootedge( const Node* target, Glib::ustring label ):Edge( NULL, target, label ),Serializable(){}
      /**
       *
       */

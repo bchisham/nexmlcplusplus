@@ -3,6 +3,7 @@
 
 #include <glibmm/ustring.h>
 #include "id.hpp"
+#include "otu.hpp"
 #include "annotation.hpp"
 #include <fstream>
 namespace NeXML {
@@ -15,8 +16,12 @@ namespace NeXML {
     /**
      * Initializes the node
      */
-    Node( const Glib::ustring& label,  
-          const Glib::ustring& otu ):Annotable(), Identifiable ( label + otu ), label_( label ),otu_(otu){}
+    Node( const Glib::ustring& label="",  
+          const Otu* otu=NULL, bool isroot=false ):Annotable(), 
+                                        Identifiable ( label ),
+                                        label_( label ),
+                                        otu_(otu), 
+                                        isroot_(isroot){}
     /**
      * Cleanup.
      */
@@ -26,12 +31,12 @@ namespace NeXML {
      */
     //const Glib::ustring& getid()const{ return id_.getid(); }
     const Glib::ustring& getlabel()const{ return label_; }
-    void setlabel( Glib::ustring& label ){ label_ = label; this->setid( label_ + otu_ );}
+    void setlabel( Glib::ustring& label ){ label_ = label; this->setid( label_ + otu_->getid() );}
     /**
      * Get the name of the associated OTU.
      */
-    const Glib::ustring& getotu()const{ return otu_; }
-    void setotu( const Glib::ustring& otu ){ otu_ = otu; this->setid( label_ + otu_ ); }
+    const NeXML::Otu* getotu()const{ return otu_; }
+    void setotu( const NeXML::Otu*& otu ){ otu_ = otu; this->setid( label_ + otu_->getid() ); }
     /**
      * See if the node is the root.
      */
@@ -45,7 +50,7 @@ namespace NeXML {
   private:
    // ID id_;
     Glib::ustring label_;
-    Glib::ustring otu_;
+    const Otu* otu_;
     bool isroot_;
   };
   

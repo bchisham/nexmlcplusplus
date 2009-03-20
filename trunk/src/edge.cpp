@@ -27,7 +27,7 @@ std::ostream& NeXML::operator<<( std::ostream& out, const Edge* rhs){
 }
 
 std::ostream& Edge::serialize( std::ostream& out )const{
-   out << "<" << EDGE_TAG << " id=\"" << getid() << "\" source=\"" << getsource() << "\" target=\"" << gettarget() << "\">\n"; 
+   out << "<" << EDGE_TAG << " id=\"" << getid() << "\" source=\"" << getsource() << "\" target=\"" << gettarget() << "\" length=\""<< getlength() << "\">\n"; 
    out << dynamic_cast< const Annotable* >( this );
    out << "</" << EDGE_TAG << ">\n";
   return out;

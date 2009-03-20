@@ -12,17 +12,30 @@
 namespace NeXML {
   /**
    */
-  class Row {
+  class Row : public Identifiable, public Serializable {
   public:
-    Row(Otu* otu);
+    /**
+     */
+    Row(Otu* otu, Glib::ustring label);
+    /**
+     */
     ~Row();
+    /**
+     */
     void addcell( Cell* );
+    /**
+     */
     Cell* getcell( unsigned int i )const;
+    /**
+     *
+     */
     friend std::ostream& operator<<( std::ostream& out, const Row& rhs);
     friend std::ostream& operator<<( std::ostream& out, const Row* rhs);
+    std::ostream& serialize( std::ostream& out )const;
   private:
-    ID id_;
+    //ID id_;
     Otu* otu_;
+    Glib::ustring label_;
     std::vector< Cell* > cells_;
   };
 
