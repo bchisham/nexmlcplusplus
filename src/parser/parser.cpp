@@ -250,7 +250,23 @@ NeXML::Network*   process_network( xmlpp::Node* node ){
 
 NeXML::Format* process_format( xmlpp::Node* node ){ 
   if (node){
-
+    NeXML::Format* ret = new NeXML::Format();
+    xmlpp::Node::NodeList l = node->get_children();
+    for ( xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
+        if ((*i)->get_name() == NeXML::STATES_TAG){
+            ret->setstates( process_states( *i) );
+        } 
+        else if ((*i)->get_name() == NeXML::CHAR_TAG){
+             ret->addchar( process_char( *i ) );
+        }
+        else if ((*i)->get_name() == NeXML::ANNOTATION_TAG){
+             ret->addannotation( process_annotation( *i ) );
+        }
+        else {
+           std::cerr << "Unknown element: " << (*i)->get_name() << std::endl;
+        }
+    }
+    return ret;
   }
   return NULL; 
 }
@@ -262,7 +278,20 @@ NeXML::States* process_states( xmlpp::Node* node ){
 }
 NeXML::Matrix* process_matrix( xmlpp::Node* node ){ 
   if (node){
-
+     xmlpp::Node::NodeList l = node->get_children();
+     NeXML::Matrix* mat = new NeXML::Matrix();
+     for ( xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
+        if ( (*i)->get_name() == NeXML::ROW_TAG ){
+           mat->addrow( process_row( *i ) );
+        }
+        else if ( (*i)->get_name() == NeXML::ANNOTATION_TAG ){
+           mat->addannotation( process_annotation( *i ) );
+        }
+        else {
+           std::cerr << "Unknown element: " << (*i)->get_name() << std::endl;
+        }
+     }
+     return mat;
   }
   return NULL; 
 }
@@ -288,7 +317,6 @@ NeXML::Edge* process_edge( xmlpp::Node* node ){
 }
 
 NeXML::Edge* process_rootedge( xmlpp::Node* node ){
-
   if ( node ){
 
   }

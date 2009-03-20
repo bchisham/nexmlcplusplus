@@ -1,4 +1,5 @@
 #include "edge.hpp"
+#include "tags.hpp"
 
 using namespace NeXML;
 
@@ -13,29 +14,28 @@ void Edge::settarget( const Node* target ){
 }
 
 void Edge::updateid(){
-    //Glib::ustring nid = 
-    dynamic_cast<Identifiable*>(this)->setid( src_->getid() + target_->getid() );
+   this->setid( src_->getid() + target_->getid() );
 }
 
 
 std::ostream& NeXML::operator<<( std::ostream& out, const Edge& rhs){
-  
-  out << "<edge id=\"" << rhs.getid() << "\" source=\"" << rhs.getsource() << "\" target=\"" << rhs.gettarget() << "\""; 
-  if (unsigned int ann = rhs.getnumannotations() ){
-    out << ">\n";
-       for (unsigned int i = 0; i < ann; ++i){
-          out << rhs.getannotation( i );
-       }
-     out << "</edge>\n";
-  }
-  else {
-      out << "/>\n";
-  }
-
-  return out;
+  return rhs.serialize( out );
 }
 std::ostream& NeXML::operator<<( std::ostream& out, const Edge* rhs){
-  if ( rhs ){ out << *rhs; }
+  if ( rhs ){ rhs->serialize( out ); }
   return out;
 }
 
+std::ostream& Edge::serialize( std::ostream& out )const{
+   out << "<" << EDGE_TAG << " id=\"" << getid() << "\" source=\"" << getsource() << "\" target=\"" << gettarget() << "\">\n"; 
+   out << dynamic_cast< const Annotable* >( this );
+   out << "</" << EDGE_TAG << ">\n";
+  return out;
+}
+
+std::ostream& Rootedge::serialize( std::ostream& out )const{
+  out << "<" << ROOTEDGE_TAG << " id=\"" << getid() << "\" target=\"" << gettarget() << "\">\n";
+  out << dynamic_cast< const Annotable* >( this );
+  out << "</" << ROOTEDGE_TAG << ">\n";
+  return out;
+}
