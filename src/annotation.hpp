@@ -64,6 +64,7 @@ namespace NeXML {
       * Serializable interface.
       */
      std::ostream& serialize(std::ostream& out)const;
+     friend std::ostream& operator<<(std::ostream& out, const Annotable* rhs){ return out;}
   private:
      std::vector< const Annotation* > notes_;
   };
