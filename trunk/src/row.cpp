@@ -31,7 +31,7 @@ std::ostream& NeXML::operator<<( std::ostream& out, const Row* rhs){
   if (rhs){ out << *rhs; }
   return out;
 }
-std::ostream& serialize( std::ostream& out )const{
+std::ostream& Row::serialize( std::ostream& out )const{
   out << "<" << ROW_TAG <<" id=\"" << getid() << "\" label=\"" << label_ << "\" otu=\"" << otu_->getid() << "\">\n";
   
   for (vector< Cell* >::const_iterator i = cells_.begin(); i != cells_.end(); ++i){

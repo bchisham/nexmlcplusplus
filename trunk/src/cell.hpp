@@ -6,6 +6,8 @@
 #include "state.hpp"
 #include "annotation.hpp"
 #include "id.hpp"
+#include "serializable.hpp"
+
 /*
  */
 namespace NeXML {
@@ -15,7 +17,8 @@ namespace NeXML {
    * Cell represents a single cell element in a matrix.
    */
   class Cell:public Annotable,
-             public Identifiable {
+             public Identifiable,
+             public Serializable {
   public:
     /**
      * Initialize the cell
@@ -49,6 +52,7 @@ namespace NeXML {
      */
     friend std::ostream& operator<<( std::ostream& out, const Cell& rhs );
     friend std::ostream& operator<<( std::ostream& out, const Cell* rhs );
+    std::ostream& serialize( std::ostream& out )const;
   private:
     Character* char_;
     State* state_;
