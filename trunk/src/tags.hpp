@@ -19,6 +19,7 @@ namespace NeXML {
  const Glib::ustring MATRIX_TAG     = "matrix";
  const Glib::ustring MEMBER_TAG     = "member";
  const Glib::ustring NETWORK_TAG    = "network";
+ const Glib::ustring NEXML_TAG      = "nexml";
  const Glib::ustring NODE_TAG       = "node";
  const Glib::ustring OTUS_TAG       = "otus";
  const Glib::ustring OTU_TAG        = "otu";
