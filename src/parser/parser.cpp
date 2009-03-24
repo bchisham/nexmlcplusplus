@@ -32,9 +32,9 @@ static NeXML::Nexml* process_root( xmlpp::Node* node );
 //Process a characters block
 static NeXML::Characters* process_characters( xmlpp::Node* node, const NeXML::Otus* );
 
-static NeXML::Otus* process_otus( xmlpp::Node* );
+static NeXML::Otus* process_otus( xmlpp::NodeSet nodes );
 //process trees
-static NeXML::Trees*     process_trees( xmlpp::Node* node, const NeXML::Otus* );
+static NeXML::Trees*     process_trees( xmlpp::NodeSet nodes, const NeXML::Otus* );
 //process a tree.
 static NeXML::Tree*      process_tree( xmlpp::Node* node );
 //process a network
@@ -112,116 +112,102 @@ NeXML::Nexml* NeXML::DOM_PARSER::parser( const Glib::ustring& src ){
 NeXML::Nexml* process_root( xmlpp::Node* node ){
   if (node){
      NeXML::Nexml* ret = new NeXML::Nexml();
-     xmlpp::Node::NodeList list = node->get_children();
-     //process child elements. we expect otus, characters (matrices), trees, and maybe annotations.
-     for (xmlpp::Node::NodeList::iterator it = list.begin(); it != list.end(); ++it ){
-         //process children.
-         if ((*it)->get_name() == NeXML::OTUS_TAG){
-            //add the otus block to the document.
-            ret->setotus( process_otus( *it ) );
-         } else if ((*it)->get_name() == NeXML::CHARACTERS_TAG ){
-            //add the matrix and attached characters and states definitions
-            ret->addmatrix( process_characters( *it, ret->getotus() ) );
-         } else if ((*it)->get_name() == NeXML::TREES_TAG ){
-            //add the tree. 
-            ret->settrees( process_trees( *it, ret->getotus() ));
-         } else if ((*it)->get_name() == NeXML::ANNOTATION_TAG ){
-            //add the annotation.
-            ret->addannotation( process_annotation( *it ) );
-         } else {
-             std::cerr << "Unknown element: " << (*it)->get_name() << std::endl;
-         }
+
+     ret ->setotus( process_otus( node->find("/otus") ) );
+     ret->settrees( process_trees( node->find("/trees"), ret->getotus() ) );
+     xmlpp::NodeSet matrices = node->find("/characters");
+     for (xmlpp::NodeSet::iterator it = matrices.begin(); it != matrices.end(); ++it){
+          ret->addmatrix( process_characters(*it, ret->getotus()) );
      }
-     return ret;
+        return ret;
+     }
+     return NULL;
   }
-  return NULL;
-}
-/*
+ /*
  * Handle processing of the otus block. 
  */
-static NeXML::Otus* process_otus( xmlpp::Node* node ){
-  if ( node ){
-    ustring id = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "id" )->get_value();
-    NeXML::Otus* ret = new NeXML::Otus();
-    xmlpp::Node::NodeList list = node->get_children();
-    for ( xmlpp::Node::NodeList::iterator it = list.begin(); it != list.end(); ++it ){
-       if ( (*it)->get_name() == NeXML::OTU_TAG ){
-           ret->addotu( process_otu( *it ) );
-       }
-       else if ( (*it)->get_name() == NeXML::ANNOTATION_TAG ){
-           ret->addannotation( process_annotation( *it ) );
-       }
-       else {
-       
-       }
-    }
-    return ret;
+static NeXML::Otus* process_otus( xmlpp::NodeSet nodes ){
+  NeXML::Otus* ret = new NeXML::Otus(); 
+  for (xmlpp::NodeSet::iterator it = nodes.begin(); it != nodes.end(); ++it){
+         ret->addotu( process_otu( *it ) );
+   }
+  return ret;
+
   }
-  return NULL;
-}
 /*
  * Processes a single otu.
  */
 NeXML::Otu* process_otu( xmlpp::Node* node ){
+  NeXML::Otu* ret = NULL;
   if ( node ){
-     ustring label = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "label" )->get_value();
-     ustring id    = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "id" )->get_value();
-     NeXML::Otu* ret = new NeXML::Otu( label );
-     otus_processed_[ id ] = ret;
-     return ret;
+    if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node ) ){
+      xmlpp::Attribute* labelattr = ele->get_attribute("label");
+      xmlpp::Attribute* idattr    = ele->get_attribute( "id" );
+      if ( idattr && labelattr ){
+        Glib::ustring label = labelattr->get_value(); 
+        ret = new NeXML::Otu( label );
+        otus_processed_[ idattr->get_value() ] = ret;
+      }
+    }
   }
-  return NULL;
+    return ret;
 }
 /*
  * Process a characters block.
  */
 NeXML::Characters* process_characters( xmlpp::Node* node, const NeXML::Otus* otus ){ 
+  NeXML::Characters* ret = NULL;
   if (node){
-    //get the type of characters type
-    ustring type = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "type" )->get_value();
-    NeXML::Characters* ret = new NeXML::Characters(type, otus);
-    xmlpp::Node::NodeList list = node->get_children();
-    //process the children
-    for ( xmlpp::Node::NodeList::iterator it = list.begin(); it != list.end(); ++it ){
-      if ( (*it)->get_name() == NeXML::FORMAT_TAG ){
-         ret->setformat( process_format( *it ) );
-      } else if ( (*it)->get_name() == NeXML::MATRIX_TAG ){
-         ret->setmatrix( process_matrix( *it ) );
-         
-      } else if ( (*it)->get_name() == NeXML::ANNOTATION_TAG ){
-          ret->addannotation( process_annotation( *it ) );
-      } else {
-         std::cerr << "Unknown element: " << (*it)->get_name() << std::endl;
+    if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node ) ){
+      if (xmlpp::Attribute* typeattr = ele->get_attribute( "type" ) ){
+        //size 1
+        xmlpp::NodeSet format = node->find( "./" + NeXML::FORMAT_TAG );
+        //size 1
+        xmlpp::NodeSet matrix = node->find(  "./" + NeXML::MATRIX_TAG );
+        //may be several annotations.
+        xmlpp::NodeSet annotations = node->find("./" + NeXML::ANNOTATION_TAG);
+        //only process if required elements are present.
+        if (format.size() && matrix.size()){
+          //get the type of characters type
+          ustring type = typeattr->get_value();
+          ret = new NeXML::Characters(type, otus);
+          xmlpp::Node::NodeList list = node->get_children();
+          ret->setformat( process_format( format.at( 0 ) ) );
+          ret->setmatrix( process_matrix( matrix.at( 0 ) ) );
+          for (xmlpp::NodeSet::iterator it = annotations.begin(); it != annotations.end(); ++it){
+             ret->addannotation( process_annotation( *it ) );
+          }
+        }
       }
     }
-     return ret;
   }
-  return NULL; 
+  return ret; 
 }
 /*
  * process the tress block.
  */
-NeXML::Trees* process_trees( xmlpp::Node* node, const NeXML::Otus* otus ){
-    if ( node ){
-        NeXML::Trees* ret = new NeXML::Trees( otus );
-        xmlpp::Node::NodeList list = node->get_children();
-        for ( xmlpp::Node::NodeList::iterator i = list.begin(); i != list.end(); ++i ){
-          if ( (*i)->get_name() == NeXML::TREE_TAG ){
-             ret->addgraph( process_tree( *i ) );
-           }
-          else if ((*i)->get_name() == NeXML::NETWORK_TAG ){
-              ret->addgraph( process_network( *i ) );
-          }
-          else if ( (*i)->get_name() == NeXML::ANNOTATION_TAG ){
-             ret->addannotation( process_annotation( *i ) );
-          }
-          else {
-              std::cerr << "Unknown element: " << (*i)->get_name() << std::endl;
-          }
+NeXML::Trees* process_trees( xmlpp::NodeSet nodes, const NeXML::Otus* otus ){
+  NeXML::Trees* ret = NULL;
+   if ( nodes.size() ){
+        ret = new NeXML::Trees( otus );
+        //xmlpp::Node::NodeList list = node.at( 0 )->get_children();
+        xmlpp::NodeSet trees = nodes.at( 0 )->find( "./" + NeXML::TREE_TAG );
+        xmlpp::NodeSet networks = nodes.at( 0 )->find( "./" + NeXML::NETWORK_TAG );
+        xmlpp::NodeSet annotations = nodes.at( 0 )->find( "./" + NeXML::ANNOTATION_TAG );
+        //process trees
+        for (xmlpp::NodeSet::iterator it = trees.begin(); it != trees.end(); ++it){
+             ret->addgraph( process_tree( *it ) );
         }
-        return ret;
+        //process networks
+        for ( xmlpp::NodeSet::iterator it = networks.begin(); it != networks.end(); ++it ){
+             ret->addgraph( process_network( *it ) );
+        }
+        //process annotations
+        for ( xmlpp::NodeSet::iterator it = annotations.begin(); it != annotations.end(); ++it){
+             ret->addannotation( process_annotation( *it ) );
+        }
     }
-    return NULL;
+    return ret;
 }
 /*
  * Process a single tree.
