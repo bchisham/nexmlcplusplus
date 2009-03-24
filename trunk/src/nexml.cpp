@@ -1,5 +1,9 @@
 #include "nexml.hpp"
 
+#ifdef EBUG_V
+#include <iostream>
+#endif
+
 using namespace NeXML;
 using namespace std;
 
@@ -17,6 +21,10 @@ Nexml::~Nexml(){
 
 
 void Nexml::setotus( Otus* otus ){
+#ifdef EBUG_V_OTUS
+  cerr << "NeXML::setotus( otus: " << (void*)otus << ")" <<  endl;
+  cerr << "current otus_ :" << (void*)otus_ << endl;
+#endif
   if (otus_ && otus != otus_){ delete otus_; }
   otus_ = otus;
   if ( trees_ ){ trees_->setotus( otus_ ); }

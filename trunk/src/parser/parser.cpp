@@ -110,42 +110,75 @@ NeXML::Nexml* NeXML::DOM_PARSER::parser( const Glib::ustring& src ){
  * Handle processing of the document root. 
  */
 NeXML::Nexml* process_root( xmlpp::Node* node ){
+  NeXML::Nexml* ret = NULL;
   if (node){
-     NeXML::Nexml* ret = new NeXML::Nexml();
+     ret = new NeXML::Nexml();
 
-     ret ->setotus( process_otus( node->find("/otus") ) );
-     ret->settrees( process_trees( node->find("/trees"), ret->getotus() ) );
-     xmlpp::NodeSet matrices = node->find("/characters");
+#ifdef EBUG_V
+    cerr << "process_root( node: " << node->get_name() << ")" << endl;
+#endif
+     
+     ret ->setotus( process_otus( node->find("./" + NeXML::OTUS_TAG ) ) );
+#ifdef EBUG_V
+     cerr << "processed the otus!\n";
+     cerr << "otus addr: " << (void*)(ret->getotus()) << "\n";
+#endif
+     ret->settrees( process_trees( node->find("./" + NeXML::TREES_TAG), ret->getotus() ) );
+ 
+#ifdef EBUG_V
+      cerr << "processed the trees!\n";
+#endif
+ 
+     xmlpp::NodeSet matrices = node->find("./characters");
+
+#ifdef EBUG_V
+    cerr << "Found: " << matrices.size() << "matrices, processing....\n";
+#endif
+
      for (xmlpp::NodeSet::iterator it = matrices.begin(); it != matrices.end(); ++it){
           ret->addmatrix( process_characters(*it, ret->getotus()) );
      }
-        return ret;
+#ifdef EBUG_V
+     cerr << "Processed Matrices!\n";
+#endif
      }
-     return NULL;
+     return ret;
   }
  /*
  * Handle processing of the otus block. 
  */
 static NeXML::Otus* process_otus( xmlpp::NodeSet nodes ){
-  NeXML::Otus* ret = new NeXML::Otus(); 
-  for (xmlpp::NodeSet::iterator it = nodes.begin(); it != nodes.end(); ++it){
-         ret->addotu( process_otu( *it ) );
-   }
-  return ret;
-
+  NeXML::Otus* ret = NULL;
+  if (nodes.size() ){
+     ret = new NeXML::Otus();
+     for (xmlpp::NodeSet::iterator it = nodes.begin(); it != nodes.end(); ++it){
+#ifdef EBUG_V
+       cerr << "processing node: " << (*it)->get_name() << "\n";
+#endif
+            ret->addotu( process_otu( *it ) );
+     }
   }
+  return ret;
+}
 /*
  * Processes a single otu.
  */
 NeXML::Otu* process_otu( xmlpp::Node* node ){
   NeXML::Otu* ret = NULL;
   if ( node ){
+#ifdef EBUG_V
+    cerr << "process_otu( node: " << node->get_name() << ")" << endl;
+#endif
+
     if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node ) ){
       xmlpp::Attribute* labelattr = ele->get_attribute("label");
       xmlpp::Attribute* idattr    = ele->get_attribute( "id" );
       if ( idattr && labelattr ){
         Glib::ustring label = labelattr->get_value(); 
         ret = new NeXML::Otu( label );
+#ifdef EBUG_V
+        cerr << "processed otu id: \"" << idattr->get_value() << "\" label: \"" << label << "\"" <<endl;
+#endif
         otus_processed_[ idattr->get_value() ] = ret;
       }
     }
@@ -189,23 +222,41 @@ NeXML::Characters* process_characters( xmlpp::Node* node, const NeXML::Otus* otu
 NeXML::Trees* process_trees( xmlpp::NodeSet nodes, const NeXML::Otus* otus ){
   NeXML::Trees* ret = NULL;
    if ( nodes.size() ){
+
+#ifdef EBUG_V
+     cerr << "process_trees( set_size: " << nodes.size() << ", otus: " << otus << ")" << endl;
+#endif
+
         ret = new NeXML::Trees( otus );
         //xmlpp::Node::NodeList list = node.at( 0 )->get_children();
         xmlpp::NodeSet trees = nodes.at( 0 )->find( "./" + NeXML::TREE_TAG );
         xmlpp::NodeSet networks = nodes.at( 0 )->find( "./" + NeXML::NETWORK_TAG );
         xmlpp::NodeSet annotations = nodes.at( 0 )->find( "./" + NeXML::ANNOTATION_TAG );
+#ifdef EBUG_V
+        cerr << "Found trees: " << trees.size() << " networks: " << networks.size() << " notes: " << annotations.size() << ", processing....." << endl;
+#endif
+
         //process trees
         for (xmlpp::NodeSet::iterator it = trees.begin(); it != trees.end(); ++it){
              ret->addgraph( process_tree( *it ) );
         }
+#ifdef EBUG_V
+        cerr << "Processed Trees starting networks" << endl;
+#endif
         //process networks
         for ( xmlpp::NodeSet::iterator it = networks.begin(); it != networks.end(); ++it ){
              ret->addgraph( process_network( *it ) );
         }
+#ifdef EBUG_V
+        cerr << "Processed Networks processing notes" << endl;
+#endif
         //process annotations
         for ( xmlpp::NodeSet::iterator it = annotations.begin(); it != annotations.end(); ++it){
              ret->addannotation( process_annotation( *it ) );
         }
+#ifdef EBUG_V
+        cerr << "Processed notes returning\n";
+#endif
     }
     return ret;
 }
@@ -213,145 +264,165 @@ NeXML::Trees* process_trees( xmlpp::NodeSet nodes, const NeXML::Otus* otus ){
  * Process a single tree.
  */
 NeXML::Tree* process_tree( xmlpp::Node* node ){ 
+  NeXML::Tree* ret = NULL;
   if (node){
     //reset the nodes map.
     nodes_processed_ = map< Glib::ustring, NeXML::Node* >();
+    
+    if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node )){
+        xmlpp::Attribute* typeattr = ele->get_attribute( "type" );
+        xmlpp::Attribute* labelattr = ele->get_attribute( "label" );
+        if ( typeattr && labelattr ){
+             ustring type = typeattr->get_value();
+             ustring label = labelattr->get_value();
+             ret = new NeXML::Tree(label, type);
+             xmlpp::NodeSet nodes = node->find("./" + NeXML::NODE_TAG );
+             xmlpp::NodeSet edges = node->find("./" + NeXML::EDGE_TAG );
+             xmlpp::NodeSet rootedge = node->find("./" + NeXML::ROOTEDGE_TAG );
+             xmlpp::NodeSet annotations = node->find("./" + NeXML::ANNOTATION_TAG);
+             
+             for (xmlpp::NodeSet::iterator it = nodes.begin(); it != nodes.end(); ++it){
+                 ret->addnode( process_node( *it ));
+             }
+             for (xmlpp::NodeSet::iterator it = edges.begin(); it != edges.end(); ++it){
+                 ret->addedge( process_edge( *it ) );
+             }
+             for (xmlpp::NodeSet::iterator it = rootedge.begin(); it != rootedge.end(); ++it ){
+                 ret->addedge( process_rootedge( *it ) );
+             }
+             for (xmlpp::NodeSet::iterator it = annotations.begin(); it != annotations.end(); ++it){
+                 ret->addannotation( process_annotation( *it ) );
+             }
 
-    ustring type = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "type" )->get_value();
-    ustring label = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "label" )->get_value();
-    NeXML::Tree* ret = new NeXML::Tree(label, type);
-    xmlpp::Node::NodeList l = node->get_children();
-    for (xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
-        if ( (*i)->get_name() == NeXML::NODE_TAG){
-             ret->addnode( process_node( *i ) );
-        } else if ( (*i)->get_name() == NeXML::EDGE_TAG ){
-             ret->addedge( process_edge( *i ) );
-        }
-        else if  ( (*i)->get_name() == NeXML::ROOTEDGE_TAG ){
-              ret->addedge( process_rootedge( *i ) );
-        }
-        else if ( (*i)->get_name() == NeXML::ANNOTATION_TAG){
-              ret->addannotation( process_annotation( *i ) );
-        }
-        else {
-           std::cerr << "Unknown element: " << (*i)->get_name() << std::endl;
-        }
+         }
     }
-
   }
-  return NULL; 
+  return ret; 
 }
 /*
  * Process a network
  */
 NeXML::Network* process_network( xmlpp::Node* node ){ 
-  if (node){
-  ustring type = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "type" )->get_value();
-    ustring label = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "label" )->get_value();
-    NeXML::Network* ret = new NeXML::Network(label, type);
-    xmlpp::Node::NodeList l = node->get_children();
-    for (xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
-        if ( (*i)->get_name() == NeXML::NODE_TAG){
-             ret->addnode( process_node( *i ) );
-        } else if ( (*i)->get_name() == NeXML::EDGE_TAG ){
-             ret->addedge( process_edge( *i ) );
-        }
-        else if  ( (*i)->get_name() == NeXML::ROOTEDGE_TAG ){
-              ret->addedge( process_rootedge( *i ) );
-        }
-        else if ( (*i)->get_name() == NeXML::ANNOTATION_TAG){
-              ret->addannotation( process_annotation( *i ) );
-        }
-        else {
-           std::cerr << "Unknown element: " << (*i)->get_name() << std::endl;
-        }
-    }
 
+ NeXML::Network* ret = NULL;
+ if (node){
+ //reset the nodes map.
+    nodes_processed_ = map< Glib::ustring, NeXML::Node* >();
+    
+    if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node )){
+        xmlpp::Attribute* typeattr = ele->get_attribute( "type" );
+        xmlpp::Attribute* labelattr = ele->get_attribute( "label" );
+        if ( typeattr && labelattr ){
+             ustring type = typeattr->get_value();
+             ustring label = labelattr->get_value();
+             ret = new NeXML::Network(label, type);
+             xmlpp::NodeSet nodes = node->find("./" + NeXML::NODE_TAG );
+             xmlpp::NodeSet edges = node->find("./" + NeXML::EDGE_TAG );
+             xmlpp::NodeSet annotations = node->find("./" + NeXML::ANNOTATION_TAG); 
+             for (xmlpp::NodeSet::iterator it = nodes.begin(); it != nodes.end(); ++it){
+                 ret->addnode( process_node( *it ));
+             }
+             for (xmlpp::NodeSet::iterator it = edges.begin(); it != edges.end(); ++it){
+                 ret->addedge( process_edge( *it ) );
+             }
+             for (xmlpp::NodeSet::iterator it = annotations.begin(); it != annotations.end(); ++it){
+                 ret->addannotation( process_annotation( *it ) );
+             }
+
+         }
+    }
   }
-  return NULL; 
+  return ret; 
 }
 /*
  * Process a format block
  */
 NeXML::Format* process_format( xmlpp::Node* node ){ 
+  NeXML::Format* ret = NULL;
   if (node){
     NeXML::Format* ret = new NeXML::Format();
-    xmlpp::Node::NodeList l = node->get_children();
-    for ( xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
-        if ((*i)->get_name() == NeXML::STATES_TAG){
-            ret->setstates( process_states( *i) );
-        } 
-        else if ((*i)->get_name() == NeXML::CHAR_TAG){
-             ret->addchar( process_char( *i ) );
-        }
-        else if ((*i)->get_name() == NeXML::ANNOTATION_TAG){
-             ret->addannotation( process_annotation( *i ) );
-        }
-        else {
-           std::cerr << "Unknown element: " << (*i)->get_name() << std::endl;
-        }
+    xmlpp::NodeSet states = node->find("./" + NeXML::STATES_TAG );
+    xmlpp::NodeSet chars  = node->find("./" + NeXML::CHAR_TAG );
+    xmlpp::NodeSet notes  = node->find("./" + NeXML::ANNOTATION_TAG );
+
+    for (xmlpp::NodeSet::iterator it = states.begin(); it != states.end(); ++it ){
+      ret->setstates( process_states( *it ) );
     }
-    return ret;
+    for (xmlpp::NodeSet::iterator it = chars.begin(); it != chars.end(); ++it ){
+      ret->addchar( process_char( *it ) );
+    }
+    for (xmlpp::NodeSet::iterator it = notes.begin(); it != notes.end(); ++it ){
+      ret->addannotation( process_annotation( *it ) );
+    }
   }
-  return NULL; 
+  return ret; 
 }
 /*
  * Process a states block
  */
 NeXML::States* process_states( xmlpp::Node* node ){ 
+  NeXML::States* ret = NULL;
   if (node){
-    xmlpp::Node::NodeList l = node->get_children();
-    Glib::ustring id = dynamic_cast< xmlpp::Element* >( node )->get_attribute( "id" )->get_value();
-    NeXML::States* ret = new NeXML::States( id );
-    states_blocks_processed_[ id ] = ret;
-    for ( xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
-         ret->addstate( process_state( *i ) );
-    }
+    if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node )){
+        if (xmlpp::Attribute* idattr = ele->get_attribute( "id" )){
+            ustring id = idattr->get_value();
+            ret = new NeXML::States( id );
+            xmlpp::NodeSet states = node->find("./" + NeXML::STATE_TAG );
+            xmlpp::NodeSet notes  = node->find("./" + NeXML::ANNOTATION_TAG);
 
+            for (xmlpp::NodeSet::iterator it = states.begin(); it != states.end(); ++it){
+              ret->addstate( process_state( *it ) );
+            }
+            for (xmlpp::NodeSet::iterator it = notes.begin(); it != notes.end(); ++it){
+              ret->addannotation( process_annotation( *it ) );
+            }
+        }
+    }
   }
-  return NULL; 
+  return ret; 
 }
 /*
  * Process a matrix.
  */
 NeXML::Matrix* process_matrix( xmlpp::Node* node ){ 
+  NeXML::Matrix* ret = NULL;
   if (node){
-     xmlpp::Node::NodeList l = node->get_children();
-     NeXML::Matrix* mat = new NeXML::Matrix();
-     for ( xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
-        if ( (*i)->get_name() == NeXML::ROW_TAG ){
-           mat->addrow( process_row( *i ) );
-        }
-        else if ( (*i)->get_name() == NeXML::ANNOTATION_TAG ){
-           mat->addannotation( process_annotation( *i ) );
-        }
-        else {
-           std::cerr << "Unknown element: " << (*i)->get_name() << std::endl;
-        }
+     
+    xmlpp::NodeSet rows = node->find( "./" + NeXML::ROW_TAG );
+    xmlpp::NodeSet notes = node->find("./" + NeXML::ANNOTATION_TAG);
+     ret = new NeXML::Matrix();
+
+     for (xmlpp::NodeSet::iterator it = rows.begin(); it != rows.end(); ++it){
+       ret->addrow( process_row( *it ) );
      }
-     return mat;
+     for (xmlpp::NodeSet::iterator it = notes.begin(); it != notes.end(); ++it){
+       ret->addannotation( process_annotation( *it ) );
+     }
   }
-  return NULL; 
+  return ret; 
 }
 /*
  * Process a single row.
  */
 NeXML::Row* process_row( xmlpp::Node* node ){ 
+  NeXML::Row* ret = NULL;
   if (node){
        if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node )){
-            NeXML::Otu* otu = otus_processed_[ ele->get_attribute( "otu" )->get_value() ];
             xmlpp::Attribute* lab = ele->get_attribute( "label" );
-            ustring label = "";
-            if (lab){  label = lab->get_value(); }
-            NeXML::Row* ret = new NeXML::Row( otu, label );
-            xmlpp::Node::NodeList l = node->get_children();
-            for ( xmlpp::Node::NodeList::iterator i = l.begin(); i != l.end(); ++i ){
-                ret->addcell( process_cell( *i ) );
+            xmlpp::Attribute* otua = ele->get_attribute( "otu" );
+            if ( otua ){
+              NeXML::Otu* otu = otus_processed_[ otua->get_value() ];
+              ustring label;
+              if (lab){  label = lab->get_value(); }
+              NeXML::Row* ret = new NeXML::Row( otu, label );
+              xmlpp::NodeSet cells = node->find( "./" + NeXML::CELL_TAG ); 
+              for ( xmlpp::NodeSet::iterator  it = cells.begin(); it != cells.end(); ++it ){
+                  ret->addcell( process_cell( *it ) );
+              }
             }
-            return ret;
-       }
+        }
   }
-  return NULL;
+  return ret;
 }
 //lowest level
 /*
