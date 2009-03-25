@@ -65,6 +65,11 @@ std::ostream& Nexml::serialize( std::ostream& out )const{
 }
 
 std::ostream& NeXML::operator<<(std::ostream& out, const Nexml& rhs){
-         return out;
+         return rhs.serialize( out );
 
+}
+
+std::ostream& NeXML::operator<<( std::ostream& out, const Nexml* rhs ){
+  if ( rhs ){ rhs->serialize( out ); }
+  return out;
 }

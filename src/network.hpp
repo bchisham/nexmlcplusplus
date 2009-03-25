@@ -63,7 +63,7 @@ namespace NeXML {
      *
      */
     void addedge( const Edge* );
-    std::ostream& serialize( std::ostream& out )const;
+    virtual std::ostream& serialize( std::ostream& out )const;
     friend std::ostream& operator<<(std::ostream& out, const Network& rhs){ return rhs.serialize( out );}
     friend std::ostream& operator<<(std::ostream& out, const Network* rhs){ 
        if (rhs){ rhs->serialize( out ); }
