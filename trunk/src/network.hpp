@@ -7,24 +7,34 @@
 #include "edge.hpp"
 #include "annotation.hpp"
 #include "id.hpp"
+#include "serializable.hpp"
+#ifdef EBUG_V
+#include <iostream>
+#endif
 namespace NeXML {
   /**
    * Represents a network/tree 
    */
   class Network : public Annotable,
-                  public Identifiable {
+                  public Identifiable,
+                  public Serializable{
   public:
     /**
      *
      */
-    Network(Glib::ustring label = "", 
-            Glib::ustring type = ""):Annotable(), 
-                                     Identifiable(label+type),
-                                     label_(label),
-                                     type_(type_),
-                                     nodes_(), 
-                                     edges_by_id_(), 
-                                     edges_(){}
+    Network(Glib::ustring label, 
+            Glib::ustring type ):Annotable(), 
+                                 Identifiable(label+type),
+                                 Serializable() {
+#ifdef EBUG_V_NET
+          std::cerr << "Network( label: " << label << ", type: " << type << ")" << std::endl;
+#endif
+          label_ = label;
+          type_ = type;
+          nodes_ = std::vector< const Node* >();
+          edges_by_id_ = std::map< Glib::ustring, const Edge* >();
+          edges_ = std::vector< const Edge* >();
+                                     }
     /**
      * Clean-up
      */
@@ -53,6 +63,12 @@ namespace NeXML {
      *
      */
     void addedge( const Edge* );
+    std::ostream& serialize( std::ostream& out )const;
+    friend std::ostream& operator<<(std::ostream& out, const Network& rhs){ return rhs.serialize( out );}
+    friend std::ostream& operator<<(std::ostream& out, const Network* rhs){ 
+       if (rhs){ rhs->serialize( out ); }
+       return out;
+    }
   protected: 
     Glib::ustring label_;
     Glib::ustring type_;
