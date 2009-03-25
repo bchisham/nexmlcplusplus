@@ -1,5 +1,3 @@
-#Project News.
-
 = 24 March 2009 =
 
 An early release is now available. This version has been tested
