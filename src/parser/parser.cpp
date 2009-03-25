@@ -247,7 +247,10 @@ NeXML::Trees* process_trees( xmlpp::NodeSet nodes, const NeXML::Otus* otus ){
 
         //process trees
         for (xmlpp::NodeSet::iterator it = trees.begin(); it != trees.end(); ++it){
-             ret->addgraph( process_tree( *it ) );
+#ifdef EBUG_V
+          cerr << "processing node: " << (*it)->get_name() << endl;
+#endif
+          ret->addgraph( process_tree( *it ) );
         }
 #ifdef EBUG_V
         cerr << "Processed Trees starting networks" << endl;
@@ -275,33 +278,60 @@ NeXML::Trees* process_trees( xmlpp::NodeSet nodes, const NeXML::Otus* otus ){
 NeXML::Tree* process_tree( xmlpp::Node* node ){ 
   NeXML::Tree* ret = NULL;
   if (node){
+#ifdef EBUG_V
+    cerr << "process_tree( node: " << node->get_name() << ")" << endl;
+#endif
     //reset the nodes map.
     nodes_processed_ = map< Glib::ustring, NeXML::Node* >();
-    
     if (xmlpp::Element* ele = dynamic_cast< xmlpp::Element* >( node )){
         xmlpp::Attribute* typeattr = ele->get_attribute( "type" );
         xmlpp::Attribute* labelattr = ele->get_attribute( "label" );
         if ( typeattr && labelattr ){
              ustring type = typeattr->get_value();
              ustring label = labelattr->get_value();
+#ifdef EBUG_V
+        cerr << "processed tree attributes type: " << type << " label: " << label << endl;
+#endif
              ret = new NeXML::Tree(label, type);
+#ifdef EBUG_V
+             cerr << "address of tree: " << (void*)ret << endl;
+#endif
              xmlpp::NodeSet nodes = node->find("descendant::*[name()='" + NeXML::NODE_TAG + "']" );
-             xmlpp::NodeSet edges = node->find("descentant::*[name()='" + NeXML::EDGE_TAG + "']");
+             xmlpp::NodeSet edges = node->find("descendant::*[name()='" + NeXML::EDGE_TAG + "']");
              xmlpp::NodeSet rootedge = node->find("descendant::*[name()='" + NeXML::ROOTEDGE_TAG + "']" );
              xmlpp::NodeSet annotations = node->find("descendant::*[name()='" + NeXML::ANNOTATION_TAG + "']");
              
+#ifdef EBUG_V
+             cerr << "found " << nodes.size() 
+                  << " nodes, " << edges.size() 
+                  << " edges, " << rootedge.size() 
+                  << " rootedge, " << annotations.size() << " annotations" << endl;
+#endif
+
              for (xmlpp::NodeSet::iterator it = nodes.begin(); it != nodes.end(); ++it){
                  ret->addnode( process_node( *it ));
              }
+#ifdef EBUG_V
+             cerr << "processed nodes" << endl;
+#endif
              for (xmlpp::NodeSet::iterator it = edges.begin(); it != edges.end(); ++it){
                  ret->addedge( process_edge( *it ) );
              }
+#ifdef EBUG_V
+             cerr << "processed edges" << endl;
+#endif
              for (xmlpp::NodeSet::iterator it = rootedge.begin(); it != rootedge.end(); ++it ){
                  ret->addedge( process_rootedge( *it ) );
              }
+#ifdef EBUG_V
+             cerr << "processed rootedge" << endl;
+#endif
              for (xmlpp::NodeSet::iterator it = annotations.begin(); it != annotations.end(); ++it){
                  ret->addannotation( process_annotation( *it ) );
              }
+#ifndef EBUG_V
+             cerr << "annotations processed" << endl;
+#endif
 
          }
     }

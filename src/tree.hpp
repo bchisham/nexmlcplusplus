@@ -5,7 +5,9 @@
 #include <map>
 #include <glibmm/ustring.h>
 #include "network.hpp"
-
+#ifdef EBUG_V
+#include <iostream>
+#endif
 namespace NeXML {
   /**
    * Represents a tree block in a NeXML file.
@@ -14,11 +16,15 @@ namespace NeXML {
   public:
     /**
      */
-    Tree(Glib::ustring label = "", Glib::ustring type ="" ):Network(label, type){}
+    Tree(Glib::ustring label, Glib::ustring type ):Network(label, type){
+#ifdef EBUG_V_TREE
+      std::cerr << "Tree( label: " << label << " type: " << type << ")" << std::endl;
+#endif
+    }
     /**
      */
-    ~Tree();
-    
+    ~Tree(){}
+    std::ostream& serialize(std::ostream& out )const;
   };
   
 }
