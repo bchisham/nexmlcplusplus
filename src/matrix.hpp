@@ -24,6 +24,9 @@ namespace NeXML {
     /**
      */
     Row* getrow( unsigned int row )const;
+
+    const unsigned getrowcount()const{ return rows_.size(); }
+
     /**
      */
     friend std::ostream& operator<<(std::ostream& out, const Matrix& rhs);

@@ -29,6 +29,8 @@ namespace NeXML {
     /**
      */
     Otu* getotu( Glib::ustring id )const;
+     
+    const unsigned int size()const{ return otus_.size(); }
 
     //const Glib::ustring& getid()const{ return id_.getid(); }
 
