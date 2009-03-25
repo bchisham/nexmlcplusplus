@@ -3,7 +3,7 @@
 using namespace NeXML;
 using namespace std;
 
-Otus::Otus():Annotable(),Identifiable(),otus_(), otus_by_id_(){}
+Otus::Otus():Annotable(),Identifiable("temp"),otus_(), otus_by_id_(){}
 
 Otus::~Otus(){
   for ( unsigned int i = 0; i < otus_.size(); ++i ){

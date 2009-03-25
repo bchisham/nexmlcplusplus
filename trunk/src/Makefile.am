@@ -1,5 +1,5 @@
 
-AM_CXXFLAGS=`pkg-config glibmm-2.4 --cflags` `pkg-config libxml++-2.6 --cflags` `libgcrypt-config --cflags` -g -DEBUG_V
+AM_CXXFLAGS=`pkg-config glibmm-2.4 --cflags` `pkg-config libxml++-2.6 --cflags` `libgcrypt-config --cflags` -g -DEBUG_V -D_GNU_SOURCE
 
 lib_LTLIBRARIES=libNeXMLCpp.la
 libNeXMLCpp_la_SOURCES=annotation.cpp \

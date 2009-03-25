@@ -17,14 +17,14 @@ namespace NeXML {
    * Cell represents a single cell element in a matrix.
    */
   class Cell:public Annotable,
-             public Identifiable,
+             //public Identifiable,
              public Serializable {
   public:
     /**
      * Initialize the cell
      */
     Cell( Character* ch, State* state ):Annotable(), 
-                                        Identifiable(), 
+                                        //Identifiable(), 
                                         char_(ch), 
                                         state_(state){}
     /**
