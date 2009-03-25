@@ -6,29 +6,26 @@
 #include "otu.hpp"
 #include "annotation.hpp"
 #include <fstream>
-#include "serializable.hpp"
 namespace NeXML {
   /**
    * Represents a node in a NeXML document
    */
   class Node : public Annotable,
-               public Identifiable,
-               public Serializable {
+               public Identifiable {
   public:
     /**
      * Initializes the node
      */
-    Node( const Glib::ustring& label="",  
+    Node( const Glib::ustring& label,  
           const Otu* otu=NULL, bool isroot=false ):Annotable(), 
                                         Identifiable ( label ),
-                                        Serializable(),
                                         label_( label ),
                                         otu_(otu), 
                                         isroot_(isroot){}
     /**
      * Cleanup.
      */
-    virtual ~Node(){}
+    ~Node(){}
     /**
      * Get the node id.
      */
@@ -48,7 +45,7 @@ namespace NeXML {
      * Declare the node to be a root node.
      */
      void setroot(bool root){ isroot_ = root;}
-     virtual std::ostream& serialize( std::ostream& out )const;
+     std::ostream& serialize( std::ostream& out )const;
      friend std::ostream& operator<<( std::ostream& out, const Node& rhs );
      friend std::ostream& operator<<( std::ostream& out, const Node* rhs );
   private:

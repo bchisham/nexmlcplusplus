@@ -11,13 +11,17 @@ namespace NeXML {
   /**
    * Edge represents a single edge in Tree or Network.
    */
-  class Edge : public Annotable, public Identifiable, public Serializable {
+  class Edge : public Annotable, 
+               public Identifiable, 
+               public Serializable {
   public:
     /**
      * Initialize the edge with the specified source and target nodes.
      */
-    Edge( const Node* src, const Node* target, Glib::ustring length ):Annotable(), 
-                                               Identifiable(),
+    Edge(  const Node* src, const Node* target, Glib::ustring length ):
+                                               Annotable(), 
+                                               Identifiable("temp"),
+                                               Serializable(),
                                                src_(src), 
                                                target_(target),
                                                length_(length){ updateid();}
