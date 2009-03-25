@@ -1,12 +1,14 @@
 #ifndef NCL_NEXML_MATRIX_HPP_
 #define NCL_NEXML_MATRIX_HPP_
-#include "nclxslt.h"
-#include "../nxscharactersblock.h"
+//#include "nclxslt.h"
+#include <nxscharactersblock.h>
 
 #include <vector>
 #include <map>
 #include <string>
 #include <set>
+
+#include "../matrix.hpp"
 
 /*
  *
@@ -19,7 +21,7 @@ class NxsNexmlMatrix : public NxsCharactersBlockAPI {
      /*
       * Initialize the matrix with the specified document tree.
       */
-     NxsNexmlMatrix(xmlDocPtr source);
+     NxsNexmlMatrix(NeXML::Characters* matrix);
      /*
       * Typical cleanup. The matrix does not take ownership of the
       * document source pointer, and it is not freed here.
@@ -45,23 +47,12 @@ class NxsNexmlMatrix : public NxsCharactersBlockAPI {
      
      
   private:
-     /*
-      * Pointer to the transformation
-      */
-     xsltStylesheetPtr style;
-     /*
-      * Shared document tree.
-      */
-     xmlDocPtr source;
-     /*
-      * Transformed matrix block of the original document.
-      */
-     xmlDocPtr matrix;
-     std::string id_; 
-     std::vector< std::string > taxa_;
-     std::vector< std::string > characters_;
+     NeXML::Characters*  matrix_;
+     //std::string id_; 
+     //std::vector< std::string > taxa_;
+     //std::vector< std::string > characters_;
 
-     std::vector< std::vector< std::string > > matrix_;
+     //std::vector< std::vector< std::string > > matrix_;
      
      std::map< std::string, NxsUnsignedSet > exsets_;
      std::map< std::string, NxsUnsignedSet > indexsets_;

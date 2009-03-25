@@ -7,40 +7,41 @@
 
 using namespace std; 
 
-static const string NXSNEXMLOTUS = "otus";
-static const string NXSNEXMLOTU  = "otu";
+//static const string NXSNEXMLOTUS = "otus";
+//static const string NXSNEXMLOTU  = "otu";
 
-static vector< NxsString >* tmptaxa_;
+//static vector< NxsString >* tmptaxa_;
 
-bool taxa_filter( xmlNode* );
-void taxa_processor( xmlNode* );
+//bool taxa_filter( xmlNode* );
+//void taxa_processor( xmlNode* );
 
-NxsNexmlTaxa::NxsNexmlTaxa( xmlDocPtr source ){
-      this->style = mktemp_xslt_file( TAXA_H_STR );
-      this->source = source;
-      this->taxa   = xsltApplyStylesheet( this->style, this->source, NULL );
+NxsNexmlTaxa::NxsNexmlTaxa( NeXML::Otus* otus ){
+      //this->style = mktemp_xslt_file( TAXA_H_STR );
+      //this->source = source;
+      //this->taxa   = xsltApplyStylesheet( this->style, this->source, NULL );
+      this->outs_ = otus;
       this->block_name_ = "Taxa Block";
       //<------data-model-------------------------------->
       this->inactive_taxa_ = set< unsigned int >();
       this->active_taxa_ = set< unsigned int >();
-      this->taxa_ = vector< NxsString >();
+      //this->taxa_ = vector< NxsString >();
       this->partitions_ = map< string, NxsPartition >();
       this->index_sets_ = map< string, NxsUnsignedSet >();
-      tmptaxa_ = & (this->taxa_);
-      this->populate_model();
+      //tmptaxa_ = & (this->taxa_);
+      //this->populate_model();
 }
 
 
 NxsNexmlTaxa::~NxsNexmlTaxa(){
-     xsltFreeStylesheet( style );
-     xmlFreeDoc( taxa );
+     //xsltFreeStylesheet( style );
+     //xmlFreeDoc( taxa );
 }
 
 //<-------NxsTaxaBlock interface---------------------->
 /*
  * Returns the maximum valid index
  */
-unsigned int NxsNexmlTaxa::GetMaxIndex()const{ return taxa_.size() -1 ; }
+unsigned int NxsNexmlTaxa::GetMaxIndex()const{ return otus_->size() -1 ; }
 /*
  * Look up the index set associated with the specified label
  */
@@ -84,7 +85,7 @@ void NxsNexmlTaxa::ChangeTaxonLabel(unsigned int i, NxsString nval){ assert( i <
 /*
  * Get the label associated with the taxon number.
  */
-NxsString NxsNexmlTaxa::GetTaxonLabel( unsigned int i )const{ assert( i < taxa_.size()); return taxa_.at( i ); }
+NxsString NxsNexmlTaxa::GetTaxonLabel( unsigned int i )const{ assert( i < taxa_.size()); return otus_.at( i )->getlabel(); }
 /*
  * Find the taxon number associated with the specified label.
  */
@@ -116,7 +117,7 @@ unsigned int NxsNexmlTaxa::GetNumTaxonLabels() const{ return this->GetNTax(); }
 /*
  * Get the number of taxon labels in the set.
  */
-unsigned int NxsNexmlTaxa::GetNTax() const{ return this->taxa_.size(); }
+unsigned int NxsNexmlTaxa::GetNTax() const{ return this->otus_->size(); }
 /*
  * Get the number of taxon labels in the set.
  */
@@ -135,11 +136,12 @@ void NxsNexmlTaxa::HandleTaxLabels( NxsToken& ){ return; }
  * Write an nexml format taxa block.
  */
 void NxsNexmlTaxa::WriteTaxLabelsCommand( std::ostream& out) const{ 
-  out << "\t<otus id=\"taxa1\" label=\"" << block_name_ << "\">" << endl;
-  for (unsigned int i = 0; i < taxa_.size(); ++i ){
-      out << "\t\t<otu id=\"t" << i << "\" label=\"" << taxa_.at( i ) << "\" />" << endl; 
-  }
-  out << "\t</otus>" << endl;
+ out << otus_;
+  // out << "\t<otus id=\"taxa1\" label=\"" << block_name_ << "\">" << endl;
+  //for (unsigned int i = 0; i < taxa_.size(); ++i ){
+  //    out << "\t\t<otu id=\"t" << i << "\" label=\"" << taxa_.at( i ) << "\" />" << endl; 
+  //}
+ // out << "\t</otus>" << endl;
   return; 
 }
 /*

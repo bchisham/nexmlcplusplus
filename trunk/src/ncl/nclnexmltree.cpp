@@ -4,15 +4,15 @@
 
 using namespace std;
 
-static const string NXSNEXMLEDGE = "edge";
-static const string NXSNEXMLTREE = "tree";
+//static const string NXSNEXMLEDGE = "edge";
+//static const string NXSNEXMLTREE = "tree";
 /*
  * keep a temp copy of most of the data model, so that it can be
  * accessed by the static c funtions that interface with the libxml/libxslt library.
  */
-static vector< string >* tmplabels;
-static map< string, bool >* tmpisRooted;
-static map< string, map< string, vector< pair< string, string > > > >* tmpgraphs;
+//static vector< string >* tmplabels;
+//static map< string, bool >* tmpisRooted;
+//static map< string, map< string, vector< pair< string, string > > > >* tmpgraphs;
 
 static string get_newick_string( string, map< string, vector< pair< string, string > > >  );
 
@@ -20,46 +20,49 @@ static string get_newick_string( string, map< string, vector< pair< string, stri
  * Callback for the nclxslt traverse function.
  * True for tree or edge nodes.
  */
-bool tree_filter( xmlNode* );
+//bool tree_filter( xmlNode* );
 /*
  * Callback for the nclxslt traverse function.
  * Processes nodes matching the filter criteria.
  */
-void tree_processor( xmlNode* );
+//void tree_processor( xmlNode* );
 /*
  * Recontitute the tree information
  */
-NxsNexmlTree::NxsNexmlTree(xmlDocPtr source){
+NxsNexmlTree::NxsNexmlTree(NeXML::Trees* trees){
+   
+    trees_ = trees;
+
     //prepare the xslt transformation.
-    this->style = mktemp_xslt_file( TREE_H_STR );
-    this->source = source;
+    //this->style = mktemp_xslt_file( TREE_H_STR );
+    //this->source = source;
     //apply the transformation.
-    this->tree = xsltApplyStylesheet( this->style, this->source, NULL );
+    //this->tree = xsltApplyStylesheet( this->style, this->source, NULL );
     //initialize the temporary  model.
-    labels = vector< string >();
-    isRooted = map< string, bool >();
-    graphs  = map< string, map< string, vector< pair< string, string > > > >();
+    //labels = vector< string >();
+    //isRooted = map< string, bool >();
+    //graphs  = map< string, map< string, vector< pair< string, string > > > >();
     index_sets_ = map< string, NxsUnsignedSet >();
     partition_sets_ = map< string, NxsPartition >();
-    tmplabels = &(this->labels);
-    tmpisRooted = &(this->isRooted);
-    tmpgraphs   = &(this->graphs);
+    //tmplabels = &(this->labels);
+    //tmpisRooted = &(this->isRooted);
+    //tmpgraphs   = &(this->graphs);
     //extract the tree topology from the transformed document.
-    build_tree_info();
+    //build_tree_info();
 }
 /*
  * Clean-up private info. The source document isn't owned by this class, 
  * so it's left untouched.
  */
 NxsNexmlTree::~NxsNexmlTree(){
-    xsltFreeStylesheet( style );
-    xmlFreeDoc( tree );
+    //xsltFreeStylesheet( style );
+    //xmlFreeDoc( tree );
 }
 
  /*NCL Trees interface*/
 unsigned	NxsNexmlTree::GetNumDefaultTree(){ return 1; }
 //return the number of trees in the description.
-unsigned	NxsNexmlTree::GetNumTrees(){ return this->labels.size(); }
+unsigned	NxsNexmlTree::GetNumTrees(){ return this->trees_->getnumtrees(); }
 //retrieve the name of a particular tree.
 NxsString	NxsNexmlTree::GetTreeName(unsigned i){ 
   assert( i < this->GetNumTrees()); 

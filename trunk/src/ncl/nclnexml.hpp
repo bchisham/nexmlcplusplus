@@ -5,7 +5,8 @@
  * Date: August 27, 2008
  * Description: Interface to nexml using xslt and libxml2
  */
-#include "nclxslt.h"
+//#include "nclxslt.h"
+#include "../nexml.hpp"
 #include "nclnexmltaxa.hpp"
 #include "nclnexmlmatrix.hpp"
 #include "nclnexmltree.hpp"
@@ -26,10 +27,11 @@ class NxsNexml {
 	~NxsNexml();
 
    private:
-	xmlDocPtr source;
-        NxsNexmlTaxa* taxa;
-        NxsNexmlMatrix* matrix;
-        NxsNexmlTree* tree;
+        NeXML::Nexml* doc_;
+//	xmlDocPtr source;
+        NxsNexmlTaxa* taxa_;
+        NxsNexmlMatrix* matrix_;
+        NxsNexmlTree* tree_;
 };
 
 #endif

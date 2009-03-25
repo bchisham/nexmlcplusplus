@@ -5,8 +5,9 @@
 #include <map>
 #include <vector>
 #include <set>
-#include "nclxslt.h"
-#include "../nxstreesblock.h"
+//#include "nclxslt.h"
+#include <nxstreesblock.h>
+#include "../trees.hpp"
 
 /*
  * Author: Brandon Chisham
@@ -18,7 +19,7 @@ class NxsNexmlTree : public NxsTreesBlockAPI {
 		/*
 		 * Initialize the trees block from the source document tree.
 		 */
-		NxsNexmlTree( xmlDocPtr source );
+		NxsNexmlTree( NeXML::Trees* trees );
 		~NxsNexmlTree();
                 /*NCL Trees interface*/
                 virtual unsigned	GetNumDefaultTree();
@@ -35,35 +36,37 @@ class NxsNexmlTree : public NxsTreesBlockAPI {
                 virtual bool            AddNewIndexSet(const std::string&, const NxsUnsignedSet&);
                 virtual bool            AddNewPartition(const std::string&, const NxsPartition&);
 	private:
+                
+                NeXML::Trees* trees_;
                 /*
                  * Build tree extracts topology information from the nexml instance,
                  * and fills in the local copy of the data model.
                  */
-                void build_tree_info();
+                //void build_tree_info();
                 /*
                  * Transformation used to extract just the tree information from the 
                  */
-		xsltStylesheetPtr style;
+		//xsltStylesheetPtr style;
                 /*
                  * Reference to the nexml source instance.
                  */
-		xmlDocPtr source;
+	//	xmlDocPtr source;
                 /*
                  * Tree portion of the nexml source instance.
                  */
-		xmlDocPtr tree;
+		//xmlDocPtr tree;
                 /*
                  * Tree labels.
                  */
-                std::vector< std::string > labels;
+                //std::vector< std::string > labels;
                 /*
                  * Flags a tree as rooted or unrooted.
                  */
-                std::map< std::string, bool > isRooted;
+                //std::map< std::string, bool > isRooted;
                 /*
                  * Topology of each tree.
                  */
-                std::map< std::string, std::map< std::string, std::vector< std::pair< std::string, std::string > > > > graphs;
+               // std::map< std::string, std::map< std::string, std::vector< std::pair< std::string, std::string > > > > graphs;
 
                 std::map< std::string, NxsUnsignedSet > index_sets_;
 

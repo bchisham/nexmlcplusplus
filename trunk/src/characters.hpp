@@ -42,6 +42,9 @@ namespace NeXML {
        * Set the matrix element.
        */
       void setmatrix(const Matrix*);
+
+      const unsigned getNChar()const{ return format_->getnumchars();  }
+
       /**
        * Write the characters block.
        */

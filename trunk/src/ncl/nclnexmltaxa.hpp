@@ -1,10 +1,13 @@
 #ifndef NCL_NEXML_TAXA_HPP_
 #define NCL_NEXML_TAXA_HPP_
-#include "nclxslt.h"
-#include "../nxstaxablock.h"
+//#include "nclxslt.h"
+#include <nxstaxablock.h>
 #include <set>
 #include <map>
 #include <vector>
+
+#include "../otus.hpp"
+#include "../otu.hpp"
 
 /*
  * Author: Brandon Chisham
@@ -17,7 +20,7 @@ class NxsNexmlTaxa : public NxsTaxaBlockAPI {
        * Initialize the taxa block from the source document tree.
        * Does not take owership of the source document.
        */
-      NxsNexmlTaxa(xmlDocPtr source);
+      NxsNexmlTaxa(NeXML::Otus* otus);
       ~NxsNexmlTaxa();
       //<-------NxsTaxaBlock interface---------------------->
       //Return the max valid index of the label list
@@ -76,15 +79,16 @@ class NxsNexmlTaxa : public NxsTaxaBlockAPI {
       //add a new partition.
       virtual bool AddNewPartition( const std::string&, const NxsPartition& );
    private:
-      void populate_model();
-      xsltStylesheetPtr style;
-      xmlDocPtr source;
-      xmlDocPtr taxa;
+      //void populate_model();
+      //xsltStylesheetPtr style;
+      //xmlDocPtr source;
+     // xmlDocPtr taxa;
       std::string block_name_;
+      NeXML::Otus* otus_; 
       /* Data structures to support NxsBlock interface */
       std::set< unsigned int > inactive_taxa_;
       std::set< unsigned int > active_taxa_;
-      std::vector< NxsString > taxa_;
+      //std::vector< NxsString > taxa_;
       std::map< std::string, NxsPartition > partitions_;
       std::map< std::string, NxsUnsignedSet > index_sets_;
 
