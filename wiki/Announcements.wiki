@@ -1,0 +1,9 @@
+#Project News.
+
+= 24 March 2009 =
+
+An early release is now available. This version has been tested
+with simple NeXML documents. Those containing a single tree and matrix. Additionally
+this should support networks, but that testing is still incomplete. Currently it only
+support reading and writing NeXML files, manipulating data after reading or creating 
+new objects and saving them is not yet supported.
