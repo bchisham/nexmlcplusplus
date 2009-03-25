@@ -23,8 +23,13 @@ namespace NeXML {
     }
     /**
      */
-    ~Tree(){}
-    std::ostream& serialize(std::ostream& out )const;
+   virtual  ~Tree(){}
+    virtual std::ostream& serialize(std::ostream& out )const;
+    friend std::ostream& operator<<( std::ostream& out, const Tree& rhs){ return rhs.serialize( out ); }
+    friend std::ostream& operator<<( std::ostream& out, const Tree* rhs){ 
+      if (rhs){ rhs->serialize( out );}
+      return out;
+    }
   };
   
 }

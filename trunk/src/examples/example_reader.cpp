@@ -28,7 +28,11 @@ Environment process_args( int argc, char** argv );
 int main( int argc, char** argv ){
    Environment env = process_args( argc, argv );
    NeXML::Nexml* doc = NeXML::DOM_PARSER::parser( env.infile_name );
-
+   if ( doc ){
+       cerr << "Successfully read document\n";
+       cerr << "Writing back out....\n";
+       cout << doc;
+   }
    return 0;
 }
 

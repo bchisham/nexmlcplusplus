@@ -57,7 +57,7 @@ namespace NeXML {
     /**
      * Serialize
      */
-    std::ostream& serialize( std::ostream& out )const;
+    virtual std::ostream& serialize( std::ostream& out )const;
   private:
     Otus* otus_;
     Trees* trees_;
