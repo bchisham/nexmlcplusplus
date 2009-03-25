@@ -1,0 +1,23 @@
+#labels Phase-Deploy
+= Introduction =
+
+This page describes how to build the NeXMLCpp library on a Linux system.
+Other Unix-like systems should be similar. 
+
+= Building =
+
+==Getting the Source==
+The download the latest [http://code.google.com/p/nexmlcplusplus/downloads/list release.]
+
+==Dependencies==
+ * [http://libxmlplusplus.sourceforge.net/ libxml++] for parsing XML
+ * [http://www.gnupg.org/documentation/manuals/gcrypt/ gcrypt] for creating unique id's.
+ * [http://www.gtkmm.org/ gtkmm] supplies a Unicode string library used by libxml++.
+ * [https://sourceforge.net/projects/ncl/ NCL]* this currently isn't a dependency, but will be in the next versions that support NCL interoperability.
+
+==Compiling==
+ * Use the following command to unpack the source <code>tar -xzvf NeXMLCpp-0.00000001.tar.gz</code>
+ * <code>cd NeXMLCpp-0.00000001</code>
+ * <code>./configure</code>
+ * <code>make</code>
+ * <code>make install</code>
