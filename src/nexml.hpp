@@ -26,6 +26,7 @@ namespace NeXML {
      * get the otus block
      */
     Otus* getotus( )const{ return otus_; }
+    Otus* getotus( ){ return otus_;}
     /**
      *  add a new matrix (including state and character definitions).
      */
@@ -38,10 +39,13 @@ namespace NeXML {
      * Get the specified matrix (including state and character definitions).
      */
     const Characters* getmatrix( unsigned int mat )const{ return mat < characters_.size() ? characters_.at( mat ) : NULL ; }
+    Characters* getmatrix( unsigned int mat ){ return mat < characters_.size() ? characters_.at( mat ) : NULL ; }
+
     /**
      * Get the trees block
      */
     const Trees* gettrees()const{ return trees_;}
+    Trees* gettrees(){ return trees_; }
     /**
      * (re)set the trees block.
      */

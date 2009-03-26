@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <vector>
+#include <map>
 #include "network.hpp"
 #include "tree.hpp"
 #include "otus.hpp"
@@ -24,15 +25,17 @@ namespace NeXML {
      */
     Trees( const Otus* otus ):Annotable(),
                               Identifiable( "trees" + otus->getid() ),
-                              Serializable(), trees_(){}
+                              Serializable(), trees_(), trees_by_label_(){}
+    ~Trees();
     /**
      * Add a new tree to the set.
      */
-    void addgraph( const Network* graph ){ trees_.push_back( graph ); }
+    void addgraph( const Network* graph );
     /**
      * Get a tree from the set.
      */
-    const Network* getgraph( unsigned int i ){ return i < trees_.size() ? trees_.at( i ) : NULL ; }
+    const Network* getgraph( unsigned int i )const{ return i < trees_.size() ? trees_.at( i ) : NULL ; }
+    const Network* getgraph( const Glib::ustring label)const;
     /**
      * Get the number of trees in the set.
      */
@@ -50,6 +53,7 @@ namespace NeXML {
   private:
     const Otus* otus_;
     std::vector< const Network* > trees_;
+    std::map< Glib::ustring, const Network* > trees_by_label_;
   };
 }
 #endif

@@ -20,7 +20,7 @@ namespace NeXML {
   }
   
   namespace SAX_PARSER {
-    NeXML::Nexml* parser( const Glib::ustring& source ){}
+    NeXML::Nexml* parser( const Glib::ustring& source );
   
   }
   

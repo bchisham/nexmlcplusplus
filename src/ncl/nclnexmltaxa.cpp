@@ -1,25 +1,19 @@
 #include "nclnexmltaxa.hpp"
-#include "nclxslt.h"
-#include "taxa.h"
+//#include "nclxslt.h"
+//#include "taxa.h"
 #include <limits.h>
 #include <cassert>
 #include <algorithm>
+#include <glibmm/ustring.h>
 
 using namespace std; 
 
-//static const string NXSNEXMLOTUS = "otus";
-//static const string NXSNEXMLOTU  = "otu";
-
-//static vector< NxsString >* tmptaxa_;
-
-//bool taxa_filter( xmlNode* );
-//void taxa_processor( xmlNode* );
 
 NxsNexmlTaxa::NxsNexmlTaxa( NeXML::Otus* otus ){
       //this->style = mktemp_xslt_file( TAXA_H_STR );
       //this->source = source;
       //this->taxa   = xsltApplyStylesheet( this->style, this->source, NULL );
-      this->outs_ = otus;
+      this->otus_ = otus;
       this->block_name_ = "Taxa Block";
       //<------data-model-------------------------------->
       this->inactive_taxa_ = set< unsigned int >();
@@ -77,15 +71,15 @@ bool NxsNexmlTaxa::NxsAddNewPartition( const std::string& key, const NxsPartitio
 /*
  * Adds a new taxon label.
  */
-unsigned int NxsNexmlTaxa::AddTaxonLabel( const std::string& nval ){ taxa_.push_back( NxsString( nval.c_str() ) ); return taxa_.size(); }
+unsigned int NxsNexmlTaxa::AddTaxonLabel( const std::string& nval ){  Glib::ustring gstring = nval; otus_->addotu( new NeXML::Otu( gstring ) ); return otus_->size(); }
 /*
  * Updates the specified taxon label.
  */
-void NxsNexmlTaxa::ChangeTaxonLabel(unsigned int i, NxsString nval){ assert( i < taxa_.size() ); taxa_[ i ] = nval; }
+void NxsNexmlTaxa::ChangeTaxonLabel(unsigned int i, NxsString nval){ assert( i < otus_->size() ); otus_->getotu( i )->setlabel( nval ); }
 /*
  * Get the label associated with the taxon number.
  */
-NxsString NxsNexmlTaxa::GetTaxonLabel( unsigned int i )const{ assert( i < taxa_.size()); return otus_.at( i )->getlabel(); }
+NxsString NxsNexmlTaxa::GetTaxonLabel( unsigned int i )const{ assert( i < otus_->size()); return NxsString( otus_->getotu( i )->getlabel().c_str() ); }
 /*
  * Find the taxon number associated with the specified label.
  */
@@ -153,7 +147,7 @@ unsigned int NxsNexmlTaxa::GetNumActiveTaxa() const{ return active_taxa_.size();
 /*
  */
 bool NxsNexmlTaxa::IsActiveTaxon( unsigned int tax)const{
-   assert( tax < taxa_.size() );
+   assert( tax < otus_->size() );
    return binary_search( active_taxa_.begin(), active_taxa_.end(), tax );
 }
 /*
@@ -217,17 +211,5 @@ bool NxsNexmlTaxa::AddNewPartition( const std::string& key , const NxsPartition&
   return true; 
 }
 
-void NxsNexmlTaxa::populate_model(){
-  traverse( xmlDocGetRootElement( taxa ), taxa_filter, taxa_processor);
-  return;
-}
-
-bool taxa_filter( xmlNode* in ){
-  return (const char*)(in->name) == NXSNEXMLOTU;
-}
 
 
-void taxa_processor( xmlNode* in ){
-  tmptaxa_->push_back( (const char*)xmlNodeGetContent( in ) );
-  return;
-}

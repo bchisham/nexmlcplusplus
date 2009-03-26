@@ -24,6 +24,7 @@ class NxsNexmlTree : public NxsTreesBlockAPI {
                 /*NCL Trees interface*/
                 virtual unsigned	GetNumDefaultTree();
 		virtual unsigned	GetNumTrees();
+                virtual unsigned        GetNumTrees()const;
 		virtual NxsString	GetTreeName(unsigned i);
 		virtual NxsString	GetTreeDescription(unsigned i);
 		virtual NxsString	GetTranslatedTreeDescription(unsigned i);
@@ -38,36 +39,7 @@ class NxsNexmlTree : public NxsTreesBlockAPI {
 	private:
                 
                 NeXML::Trees* trees_;
-                /*
-                 * Build tree extracts topology information from the nexml instance,
-                 * and fills in the local copy of the data model.
-                 */
-                //void build_tree_info();
-                /*
-                 * Transformation used to extract just the tree information from the 
-                 */
-		//xsltStylesheetPtr style;
-                /*
-                 * Reference to the nexml source instance.
-                 */
-	//	xmlDocPtr source;
-                /*
-                 * Tree portion of the nexml source instance.
-                 */
-		//xmlDocPtr tree;
-                /*
-                 * Tree labels.
-                 */
-                //std::vector< std::string > labels;
-                /*
-                 * Flags a tree as rooted or unrooted.
-                 */
-                //std::map< std::string, bool > isRooted;
-                /*
-                 * Topology of each tree.
-                 */
-               // std::map< std::string, std::map< std::string, std::vector< std::pair< std::string, std::string > > > > graphs;
-
+                
                 std::map< std::string, NxsUnsignedSet > index_sets_;
 
                 std::map< std::string, NxsPartition > partition_sets_;

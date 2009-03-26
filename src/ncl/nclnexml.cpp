@@ -1,19 +1,19 @@
 #include "nclnexml.hpp"
-#include "taxa.h"
-#include "matrix.h"
-#include "tree.h"
+#include <parser/parser.hpp>
+//#include "taxa.h"
+//#include "matrix.h"
+//#include "tree.h"
 using namespace std;
 
 NxsNexml::NxsNexml( const string& nexml_source ){
-    //this->source = xmlParseFile( nexml_source.c_str() );
-    this->taxa_   = new NxsNexmlTaxa( this->source );
-    this->matrix_ = new NxsNexmlMatrix( this->source );
-    this->tree_   = new NxsNexmlTree( this->source );
+    this->doc_ =  NeXML::DOM_PARSER::parser( nexml_source );
+    this->taxa_   = new NxsNexmlTaxa( this->doc_->getotus() );
+    this->matrix_ = new NxsNexmlMatrix( this->doc_->getmatrix(0) );
+    this->tree_   = new NxsNexmlTree( this->doc_->gettrees() );
 
 }
 
 NxsNexml::~NxsNexml(){
-    //xmlFreeDoc( this->source );
     delete doc_;
     delete taxa_;
     delete matrix_;
