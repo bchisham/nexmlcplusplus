@@ -1,6 +1,6 @@
 = 25 March 2009 =
 
-The [https://sourceforge.net/projects/ncl/ NCL] interface for the library. A basic interface is not available for taxa, matrices, and trees.
+The [https://sourceforge.net/projects/ncl/ NCL] interface for the library is now available.  A basic interface is now available for taxa, matrices, and trees.
 
 = 24 March 2009 =
 
