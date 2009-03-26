@@ -3,6 +3,7 @@
 using namespace NeXML;
 using namespace std;
 
+
 std::ostream& Tree::serialize( std::ostream& out )const{
   
   out << "<" << NeXML::TREE_TAG << " id=\"" << this->getid() << "\""<< " label=\"" << this->getlabel()  << "\" type=\"" << this->gettype() << "\">" << endl;

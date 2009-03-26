@@ -17,20 +17,34 @@ AC_PROG_LN_S
 AC_SUBST(LIBTOOL_DEPS)
 
 # Checks for libraries.
+#check for libxml++
 PKG_CHECK_MODULES(LIBXML, libxml++-2.6 >= 2.10.0)
 AC_SUBST(LIBXML_CFLAGS)
 AC_SUBST(LIBXML_LIBS)
 
+#check for NCL
+PKG_CHECK_MODULES(NCL, nclv2.1 >= 2.1 )
+AC_SUBST(NCL_CFLAGS)
+AC_SUBST(NCL_LIBS)
 
+#check for gcrypt
+LIBGCRYPT_CFLAGS=`libgcrypt-config --cflags`
+LIBGCRYPT_LIBS=`libgcrypt-config --libs`
 
+AC_SUBST(LIBGCRYPT_CFLAGS)
+AC_SUBST(LIBGCRYPT_LIBS)
 
 # Checks for header files.
+
+
 
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile]
-                [src/Makefile])
+AC_CONFIG_FILES([Makefile \
+                 src/Makefile \
+                 nexmlcpp.pc
+                 ])
 
 AC_OUTPUT

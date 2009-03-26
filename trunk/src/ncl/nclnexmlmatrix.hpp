@@ -8,7 +8,7 @@
 #include <string>
 #include <set>
 
-#include "../matrix.hpp"
+#include "../characters.hpp"
 
 /*
  *
@@ -21,7 +21,7 @@ class NxsNexmlMatrix : public NxsCharactersBlockAPI {
      /*
       * Initialize the matrix with the specified document tree.
       */
-     NxsNexmlMatrix(NeXML::Characters* matrix);
+     NxsNexmlMatrix(  NeXML::Characters* matrix);
      /*
       * Typical cleanup. The matrix does not take ownership of the
       * document source pointer, and it is not freed here.
@@ -45,15 +45,11 @@ class NxsNexmlMatrix : public NxsCharactersBlockAPI {
      virtual bool AddNewIndexSet(const std::string&, const NxsUnsignedSet&);
      virtual bool AddNewPartition(const std::string&, const NxsPartition&);
      
-     
+     virtual std::string GetDefaultCodonPosPartitionName() const;
+     virtual NxsPartition GetCodonPosPartition(const std::string&) const;
   private:
-     NeXML::Characters*  matrix_;
-     //std::string id_; 
-     //std::vector< std::string > taxa_;
-     //std::vector< std::string > characters_;
-
-     //std::vector< std::vector< std::string > > matrix_;
-     
+      NeXML::Characters*  matrix_;
+          
      std::map< std::string, NxsUnsignedSet > exsets_;
      std::map< std::string, NxsUnsignedSet > indexsets_;
      std::map< std::string, NxsPartition > partitions_;

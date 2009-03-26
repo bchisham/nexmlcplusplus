@@ -20,7 +20,7 @@ class NxsNexmlTaxa : public NxsTaxaBlockAPI {
        * Initialize the taxa block from the source document tree.
        * Does not take owership of the source document.
        */
-      NxsNexmlTaxa(NeXML::Otus* otus);
+      NxsNexmlTaxa( NeXML::Otus* otus);
       ~NxsNexmlTaxa();
       //<-------NxsTaxaBlock interface---------------------->
       //Return the max valid index of the label list
