@@ -5,9 +5,10 @@
 #include <cassert>
 
 using namespace std;
-
+using namespace NeXML;
 
 static string get_newick_string( const NeXML::Node* current, const NeXML::Network* tree );
+static Network* parse_newick_string( string tree );
 
 /*
  * Initialize the trees block
@@ -19,8 +20,23 @@ NxsNexmlTree::NxsNexmlTree(  NeXML::Trees* trees){
     index_sets_ = map< string, NxsUnsignedSet >();
     partition_sets_ = map< string, NxsPartition >();
 }
+
+NxsNexmlTree::NxsNexmlTree( NxsTreesBlock& nxstrees, const Otus* otus){
+  
+    trees_ = new Trees( otus );
+    
+    for (unsigned i = 0; i < nxstrees.GetNumTrees(); ++i ){
+       trees_->addgraph(  parse_newick_string( nxstrees.GetTreeDescription( i ) ) );
+    }
+
+    index_sets_ = map< string, NxsUnsignedSet >();
+    partition_sets_ = map< string, NxsPartition >();
+
+}
+
 /* Clean-up private info. */
 NxsNexmlTree::~NxsNexmlTree(){
+  delete trees_;
   index_sets_.empty();
   partition_sets_.empty();
 }
@@ -102,3 +118,8 @@ string get_newick_string( const NeXML::Node* current, const NeXML::Network* tree
    return ""; 
 
 }
+
+static Network* parse_newick_string( string tree ){
+ return NULL;
+}
+
