@@ -7,29 +7,45 @@
 #include <glibmm/ustring.h>
 
 using namespace std; 
-
+using namespace NeXML;
 
 NxsNexmlTaxa::NxsNexmlTaxa( NeXML::Otus* otus ){
-      //this->style = mktemp_xslt_file( TAXA_H_STR );
-      //this->source = source;
-      //this->taxa   = xsltApplyStylesheet( this->style, this->source, NULL );
       this->otus_ = otus;
       this->block_name_ = "Taxa Block";
       //<------data-model-------------------------------->
       this->inactive_taxa_ = set< unsigned int >();
       this->active_taxa_ = set< unsigned int >();
-      //this->taxa_ = vector< NxsString >();
       this->partitions_ = map< string, NxsPartition >();
       this->index_sets_ = map< string, NxsUnsignedSet >();
-      //tmptaxa_ = & (this->taxa_);
-      //this->populate_model();
 }
 
+NxsNexmlTaxa::NxsNexmlTaxa( NxsTaxaBlock nTax ){
+  vector< Otu* > otus = vector< Otu* >();
+  for ( unsigned i = 0; i < nTax.GetNTaxTotal(); ++i ){
+     otus.push_back( new Otu( Glib::ustring( nTax.GetTaxonLabel( i ).c_str() ) ) );
+  }
+  this->otus_ = new Otus( otus );
+  this->block_name_ = "Taxa Block";
+  //<------data-model-------------------------------->
+  this->inactive_taxa_ = set< unsigned int >();
+  this->active_taxa_ = set< unsigned int >();
+  this->partitions_ = map< string, NxsPartition >();
+  this->index_sets_ = map< string, NxsUnsignedSet >();
 
-NxsNexmlTaxa::~NxsNexmlTaxa(){
-     //xsltFreeStylesheet( style );
-     //xmlFreeDoc( taxa );
 }
+
+NxsNexmlTaxa::~NxsNexmlTaxa(){}
+/**
+ * Build a Nexus version of the block's data.
+ */
+NxsTaxaBlock NxsNexmlTaxa::getNexusBlock()const{
+   NxsTaxaBlock ret = NxsTaxaBlock();
+   for ( unsigned i = 0; i < this->GetNTaxTotal(); ++i ){
+      ret.AddTaxonLabel( this->GetTaxonLabel( i ) );
+   }
+   return ret;
+}
+
 
 //<-------NxsTaxaBlock interface---------------------->
 /*
