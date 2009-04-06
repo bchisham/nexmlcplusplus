@@ -8,6 +8,7 @@
 //#include "nclxslt.h"
 #include <nxstreesblock.h>
 #include "../trees.hpp"
+#include "../otus.hpp"
 
 /*
  * Author: Brandon Chisham
@@ -20,6 +21,7 @@ class NxsNexmlTree : public NxsTreesBlockAPI {
 		 * Initialize the trees block from the source document tree.
 		 */
 		NxsNexmlTree( NeXML::Trees* trees );
+                NxsNexmlTree( NxsTreesBlock& nxstrees, const NeXML::Otus* otus);
 		~NxsNexmlTree();
                 /*NCL Trees interface*/
                 virtual unsigned	GetNumDefaultTree();
