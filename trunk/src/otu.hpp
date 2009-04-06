@@ -17,7 +17,7 @@ namespace NeXML {
     /**
      * Initialize the otu.
      */
-    Otu(Glib::ustring& label):Annotable(),
+    Otu(Glib::ustring label):Annotable(),
                               Identifiable( label ),
 			      label_( label ){}
     /**

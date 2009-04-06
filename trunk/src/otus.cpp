@@ -4,6 +4,11 @@ using namespace NeXML;
 using namespace std;
 
 Otus::Otus():Annotable(),Identifiable("temp"),otus_(), otus_by_id_(){}
+Otus::Otus( vector< Otu* > in ):Annotable(), Identifiable("temp"), otus_( ), otus_by_id_(){
+   for ( vector< Otu* >::iterator i = otus_.begin(); i != otus_.end(); ++i ){
+      addotu( *i );
+   }
+}
 
 Otus::~Otus(){
   for ( unsigned int i = 0; i < otus_.size(); ++i ){

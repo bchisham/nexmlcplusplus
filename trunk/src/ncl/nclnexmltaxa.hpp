@@ -9,19 +9,29 @@
 #include "../otus.hpp"
 #include "../otu.hpp"
 
-/*
+/**
  * Author: Brandon Chisham
  * Date: August 27, 2008
  * Description: Representation of the taxa block.
  */
 class NxsNexmlTaxa : public NxsTaxaBlockAPI {
    public:
-      /*
-       * Initialize the taxa block from the source document tree.
-       * Does not take owership of the source document.
+      /**
+       * Initialize the taxa block with the specified set of otus.
        */
       NxsNexmlTaxa( NeXML::Otus* otus);
+      /**
+       * Copy Nexus data to this block
+       */
+      NxsNexmlTaxa( NxsTaxaBlock nTax );
+      /**
+       * Clean-up.
+       */
       ~NxsNexmlTaxa();
+      /**
+       * Get a NxsTaxaBlock version of the data.
+       */
+      NxsTaxaBlock getNexusBlock()const;
       //<-------NxsTaxaBlock interface---------------------->
       //Return the max valid index of the label list
       virtual unsigned int GetMaxIndex()const;
