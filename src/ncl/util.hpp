@@ -1,5 +1,5 @@
-#ifndef UTIL_HPP_
-#define UTIL_HPP_
+#ifndef CDAO_UTIL_HPP_
+#define CDAO_UTIL_HPP_
 #include <string>
 
 namespace CDAO {
@@ -10,6 +10,9 @@ namespace CDAO {
   /*
    * Convert numbers to strings.
    */
-  std::string number_to_string( int number );
+  std::string number_to_string( unsigned int number );
+  std::string convert( unsigned int number ){ return number_to_string( number ); }
+  std::string number_to_string( double number );
+  std::string convert( double number ){ return number_to_string( number ); }
 }
 #endif

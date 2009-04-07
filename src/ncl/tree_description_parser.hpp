@@ -5,9 +5,9 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include "tree_description_scanner.hpp"
-#include "util.hpp"
-#include "node.hpp"
+#include <ncl/tree_description_scanner.hpp>
+#include <ncl/util.hpp>
+#include <ncl/node.hpp>
 namespace CDAO {
  
   /*

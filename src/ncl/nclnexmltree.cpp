@@ -2,13 +2,109 @@
 //#include "tree.h"
 //#include "nclxsltxx.hpp"
 
+#include "tree_description_parser.hpp"
+#include "node.hpp"
+#include "../tree.hpp"
+#include "../network.hpp"
+#include "../node.hpp"
+#include "../id.hpp"
 #include <cassert>
 
 using namespace std;
 using namespace NeXML;
+using namespace CDAO;
 
 static string get_newick_string( const NeXML::Node* current, const NeXML::Network* tree );
-static Network* parse_newick_string( string tree );
+static Network* parse_newick_string( string tree, const NeXML::Otus* otus );
+/**
+ * Delegate to process a CDAO node from the tree description parse and produce
+ * a network with nexml nodes.
+ */
+class parse_node_to_nex_node : public CDAO::Node::Delegate {
+  public:
+    /**
+     * Creates an empty network and prepares the delegate for use.
+     */
+    parse_node_to_nex_node(Glib::ustring label, Glib::ustring type, const NeXML::Otus* otus):net_( new Network( label, type ) ), otus_(otus){}
+    /**
+     * Clean-up
+     */
+    virtual ~parse_node_to_nex_node(){}
+    /**
+     * Delegate interface implementation.
+     */
+    virtual void operator()(const CDAO::Node* in){ doConversion( in ); }
+    /**
+     * Retrieve the partially constructed network
+     */
+    NeXML::Network* getnetwork()const{ return net_; }
+  private:
+    /**
+     * Do the conversion from a CDAO::Node to a NeXML::Node
+     */
+    void doConversion( const CDAO::Node* in ){
+      if (in->hasChildren()){
+         //this is an internal node it doesn't have an associated otu.
+         if (in->hasAncestor()){
+           net_->addnode( new NeXML::Node( in->getLabel() ) );
+         }
+         else {
+           //this node doesn't have an ancestor it must be the root.
+           net_->addnode( new NeXML::Node( in->getLabel(), NULL, true ) );
+         }
+      }
+      else {
+         //this is a terminal node it should be associated with an otu.
+         ID otuid = ID( in->getLabel() );
+         net_->addnode( new NeXML::Node( in->getLabel(), otus_->getotu(otuid.getid()) ) );
+      }
+      return;
+    }
+    NeXML::Network* net_;
+    const NeXML::Otus* otus_;
+};
+/**
+ * Create edge instances based on the already converted nodes and the 
+ * parsetree of CDAO nodes
+ */
+class process_edges : public CDAO::Node::Delegate {
+  public:
+    /**
+     * Net is the partially constructed Network obtained after applying
+     * the parse_node_to_nex_node delegate has been applied to the parsetree.
+     */
+    process_edges( NeXML::Network* net/*, NeXML::Otus* otus*/ ):net_( net )/*, 
+                                                               otus_(otus)*/{}
+    /**
+     * Cleanup
+     */
+    virtual ~process_edges(){}
+    /**
+     * Delegate Interface
+     */
+    virtual void operator()(const CDAO::Node* in){ doConversion( in ); }
+    /**
+     * Get the constructed network.
+     */
+    NeXML::Network* getnetwork()const{ return net_; }
+  private:
+    /**
+     * Do the edge creation.
+     */
+    void doConversion(const CDAO::Node* in){
+         const vector< const CDAO::Node* > children = in->getDescendants();
+         ID parent_id = ID( in->getLabel() );
+         for (vector< const CDAO::Node* >::const_iterator i = children.begin(); i != children.end(); ++i ){
+            ID child_id = ID( (*i)->getLabel() );
+            const NeXML::Node* parent = net_->getnode( parent_id.getid() );
+            const NeXML::Node* child  = net_->getnode( child_id.getid() );
+            net_->addedge( new NeXML::Edge( parent, child, convert( (*i)->getWeight() ) ) );
+         }
+       
+    }
+    NeXML::Network* net_;
+    //NeXML::Otus* otus_;
+};
 
 /*
  * Initialize the trees block
@@ -26,7 +122,7 @@ NxsNexmlTree::NxsNexmlTree( NxsTreesBlock& nxstrees, const Otus* otus){
     trees_ = new Trees( otus );
     
     for (unsigned i = 0; i < nxstrees.GetNumTrees(); ++i ){
-       trees_->addgraph(  parse_newick_string( nxstrees.GetTreeDescription( i ) ) );
+       trees_->addgraph(  parse_newick_string( nxstrees.GetTreeDescription( i ), otus ) );
     }
 
     index_sets_ = map< string, NxsUnsignedSet >();
@@ -119,7 +215,18 @@ string get_newick_string( const NeXML::Node* current, const NeXML::Network* tree
 
 }
 
-static Network* parse_newick_string( string tree ){
- return NULL;
+static Network* parse_newick_string( string tree, const NeXML::Otus* otus ){
+  TreeDescriptionParser parser = TreeDescriptionParser( tree );
+  CDAO::Node* parsetree = parser.getParseTree();
+  NeXML::Network* ret = NULL;
+  if ( parsetree ){
+    //TODO find a reasonable way of getting the type.
+    parse_node_to_nex_node pntnn = parse_node_to_nex_node( parsetree->getLabel(),"FloatTree",otus);
+    parsetree->preOrderTraversal( &pntnn  );
+    ret = pntnn.getnetwork();
+    process_edges pe = process_edges( ret );
+    parsetree->preOrderTraversal( &pe );
+  }
+ return ret;
 }
 
