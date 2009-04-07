@@ -48,7 +48,7 @@ const Node* Network::getparent( const Node* child )const{
 }
 
 void Network::addnode( const Node* node ){
-   if ( node ){
+   if ( node && nodes_by_id_[ node->getid() ] == NULL ){
         nodes_.push_back( node );
         nodes_by_id_[ node->getid() ] = node;
         if ( node->isroot() ){ root_ = node; }

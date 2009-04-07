@@ -14,7 +14,10 @@ namespace NeXML {
      * Construct a new id.
      */
     ID(const Glib::ustring& data):lmaker_( new Sha1LabelMaker() ),
-				  label_( "id" + lmaker_->makeid( data + convert_serial() ) ){serialno++;}
+				  label_( ){ if (data.size() > 0){ setid(data); } 
+                                             else { setid(convert_serial()); } 
+                                             serialno++;
+                                  }
     /**
      * Cleanup
      */

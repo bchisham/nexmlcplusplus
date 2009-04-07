@@ -1,11 +1,12 @@
-#ifndef NODE_HPP_
-#define NODE_HPP_
+#ifndef CDAO_NODE_HPP_
+#define CDAO_NODE_HPP_
 
 #include <vector>
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include "global_defs.hpp"
+#include <ncl/util.hpp>
+//#include "global_defs.hpp"
 namespace CDAO {
   class Node;
   typedef void (*tree_op_t)(const Node*);

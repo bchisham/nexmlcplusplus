@@ -25,7 +25,9 @@ libNeXMLCpp_la_SOURCES=annotation.cpp \
 		       ncl/nclnexml.cpp \
 		       ncl/nclnexmltaxa.cpp \
 		       ncl/nclnexmlmatrix.cpp \
-		       ncl/nclnexmltree.cpp
+		       ncl/nclnexmltree.cpp \
+		       ncl/tree_description_scanner.cpp
+		       ncl/tree_description_parser.cpp
 
 libNeXMLCpp_la_LIBADD= $(DEPS_LIBS)
 check_PROGRAMS = example_reader
