@@ -5,22 +5,26 @@ using namespace NeXML;
 using namespace std;
 
 States::~States(){
-  for (set< const State* >::iterator i = states_.begin(); i != states_.end(); ++i){
+  for (vector< const State* >::iterator i = states_.begin(); i != states_.end(); ++i){
      delete *i;
   }
 }
 
 void States::addstate( const State* state){
   if (state){ 
-    states_.insert( state );  
+    states_.push_back( state );  
     setid( getid() + state->getid() );
   }
   return;
 }
 
 const State* States::getstate( const Glib::ustring& i )const{
-   set< const State* >::const_iterator ret = find(states_.begin(), states_.end(), i  );
+   vector< const State* >::const_iterator ret = find(states_.begin(), states_.end(), i  );
    return  ret == states_.end() ? NULL : *ret ;
+}
+
+const State* States::getstate( const unsigned i )const{
+   return states_.at( i );
 }
 
 std::ostream& States::serialize( std::ostream& out )const{
@@ -28,7 +32,7 @@ std::ostream& States::serialize( std::ostream& out )const{
   //serialize annotations if any.
   out << dynamic_cast< const Annotable* >( this );
   //print children.
-  for ( set< const State* >::const_iterator i = states_.begin(); i != states_.end(); ++i){
+  for ( vector< const State* >::const_iterator i = states_.begin(); i != states_.end(); ++i){
      out << *i;
   }
   out << "</" << STATES_TAG << ">\n";

@@ -2,10 +2,10 @@
 //#include "matrix.h"
 #include <cassert>
 #include <cctype>
-
+#include "../tags.hpp"
 using namespace std;
 
-
+map< Glib::ustring, NxsCharactersBlock::DataTypesEnum > NxsNexmlCharacters::types_ = map< Glib::ustring, NxsCharactersBlock::DataTypesEnum >();
 
 /*
  * Process observation data. 
@@ -25,7 +25,17 @@ NxsNexmlCharacters::NxsNexmlCharacters( NeXML::Characters* matrix):nxscharblock_
     transformationManager_ = NxsTransformationManager();
     datatypeMappers_ = vector< const NxsDiscreteDatatypeMapper*>();
     codonPartitions_ = map< string, pair< NxsPartition, bool > >();
-
+    
+    if (types_.size() == 0){
+        types_[ NeXML::STANDARD_TYPE ]   = NxsCharactersBlock::standard;
+        types_[ NeXML::DNA_TYPE ]        = NxsCharactersBlock::dna;
+        types_[ NeXML::RNA_TYPE ]        = NxsCharactersBlock::rna;
+        types_[ NeXML::NUCLEOTIDE_TYPE ] = NxsCharactersBlock::nucleotide;
+        types_[ NeXML::PROTEIN_TYPE ]    = NxsCharactersBlock::protein;
+        types_[ NeXML::CODON_TYPE ]      = NxsCharactersBlock::codon;
+        types_[ NeXML::CONTINUOUS_TYPE ] = NxsCharactersBlock::continuous;
+        types_[ NeXML::MIXED_TYPE ]      = NxsCharactersBlock::mixed;
+    }
    
 }
 
@@ -37,6 +47,17 @@ NxsNexmlCharacters::NxsNexmlCharacters( NxsCharactersBlock* nxsblock ):nxscharbl
     transformationManager_ = nxsblock->GetNxsTransformationManagerRef();
     datatypeMappers_ = nxsblock->GetAllDatatypeMappers(); //vector< const NxsDiscreteDatatypeMapper*>();
     codonPartitions_ = map< string, pair< NxsPartition, bool > >();
+    
+    if (types_.size() == 0){
+        types_[ NeXML::STANDARD_TYPE ]   = NxsCharactersBlock::standard;
+        types_[ NeXML::DNA_TYPE ]        = NxsCharactersBlock::dna;
+        types_[ NeXML::RNA_TYPE ]        = NxsCharactersBlock::rna;
+        types_[ NeXML::NUCLEOTIDE_TYPE ] = NxsCharactersBlock::nucleotide;
+        types_[ NeXML::PROTEIN_TYPE ]    = NxsCharactersBlock::protein;
+        types_[ NeXML::CODON_TYPE ]      = NxsCharactersBlock::codon;
+        types_[ NeXML::CONTINUOUS_TYPE ] = NxsCharactersBlock::continuous;
+        types_[ NeXML::MIXED_TYPE ]      = NxsCharactersBlock::mixed;
+    }
 
 }
 
@@ -45,6 +66,78 @@ NxsNexmlCharacters::~NxsNexmlCharacters(){
     //xmlFreeDoc( matrix );
 }
 
+ //<---NCL NxsCharactersBlock Interface----->
+     NxsCharactersBlock::DataTypesEnum NxsNexmlCharacters::GetDataType() const{
+       
+     }
+     NxsCharactersBlock::DataTypesEnum NxsNexmlCharacters::GetOriginalDataType() const {
+     
+     }
+     const NxsDiscreteStateRow & NxsNexmlCharacters::GetDiscreteMatrixRow(unsigned taxNum) const{
+     
+     }
+     char NxsNexmlCharacters::GetGapSymbol() const{
+     
+     }
+     void NxsNexmlCharacters::SetGapSymbol(char sym){
+     
+     }
+     VecBlockPtr NxsNexmlCharacters::GetImpliedBlocks(){
+     
+     }
+     int NxsNexmlCharacters::GetInternalRepresentation(unsigned i, unsigned j, unsigned k ) const{
+     
+     }
+     std::vector<std::string> NxsNexmlCharacters::GetItems() const{
+     
+     }
+     char NxsNexmlCharacters::GetMatchcharSymbol() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetMaxObsNumStates(bool countMissingStates) const {
+     
+     }
+     char NxsNexmlCharacters::GetMissingSymbol() const{
+     
+     }
+     unsigned NxsNexmlCharacters::GetNCharTotal()  {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNTaxWithData() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumActiveChar() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumIncludedChars() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumEliminated() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumEquates() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumUserEquates() const{
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumMatrixCols() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumMatrixRows() const {
+     
+     }
+     unsigned NxsNexmlCharacters::GetNChar() const{
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumChar() const{
+     
+     }
+     unsigned NxsNexmlCharacters::GetNumStates(unsigned i, unsigned j) const {
+     
+     }
+
+//<------NCL NxsCharactersBlcokAPI interface impl.----------->
 unsigned NxsNexmlCharacters::ApplyExset(NxsUnsignedSet &exset){ 
   return 0; 
 }

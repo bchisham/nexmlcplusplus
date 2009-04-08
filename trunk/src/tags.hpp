@@ -33,7 +33,15 @@ namespace NeXML {
  const Glib::ustring TREES_TAG      = "trees";
  const Glib::ustring UNCERT_TAG     = "uncertain_state_set";
  
-
+ //
+ const Glib::ustring CODON_TYPE      = "CodonCells";
+ const Glib::ustring CONTINUOUS_TYPE = "ContinuousCells";
+ const Glib::ustring DNA_TYPE        = "DnaCells";
+ const Glib::ustring NUCLEOTIDE_TYPE = "NucleotideCells";
+ const Glib::ustring MIXED_TYPE      = "MixedCells";
+ const Glib::ustring PROTEIN_TYPE    = "ProteinCells";
+ const Glib::ustring RNA_TYPE        = "RnaCells";
+ const Glib::ustring STANDARD_TYPE   = "StandardCells";
 
 
 }
