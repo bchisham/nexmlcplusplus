@@ -24,6 +24,8 @@ Cell* Row::getcell( unsigned int i )const{
     return ret;
 }
 
+unsigned Row::size()const{ return cells_.size(); }
+
 std::ostream& NeXML::operator<<( std::ostream& out, const Row& rhs){
    return out;
 }

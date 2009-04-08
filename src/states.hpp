@@ -2,7 +2,7 @@
 #define STATES_HPP_
 
 #include <fstream>
-#include <set>
+#include <vector>
 
 #include "id.hpp"
 #include "annotation.hpp"
@@ -37,6 +37,7 @@ namespace NeXML {
      * Get the specified state.
      */
     const State* getstate( const Glib::ustring&  i )const;
+    const State* getstate( const unsigned i )const;
     /**
      * Serialize the block.
      */
@@ -45,7 +46,7 @@ namespace NeXML {
     std::ostream& serialize( std::ostream& out )const;
   private:
     //ID id_;
-    std::set< const State* > states_;
+    std::vector< const State* > states_;
   };
 
 }
