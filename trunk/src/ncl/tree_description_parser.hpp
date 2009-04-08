@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <ncl/tree_description_scanner.hpp>
-#include <ncl/util.hpp>
+#include <util/util.hpp>
 #include <ncl/node.hpp>
 namespace CDAO {
  

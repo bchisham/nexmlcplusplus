@@ -1,6 +1,7 @@
 #ifndef ID_HPP_
 #define ID_HPP_
 #include "util/makeid.hpp"
+#include "util/util.hpp"
 #include <glibmm/ustring.h>
 #include <fstream>
 
@@ -14,10 +15,10 @@ namespace NeXML {
      * Construct a new id.
      */
     ID(const Glib::ustring& data):lmaker_( new Sha1LabelMaker() ),
-				  label_( ){ if (data.size() > 0){ setid(data); } 
-                                             else { setid(convert_serial()); } 
-                                             serialno++;
-                                  }
+				  label_( ){ 
+                                    if (data.size() > 0){ setid(data); } 
+                                    else { setid(CDAO::convert(serialno++)); } 
+    }    
     /**
      * Cleanup
      */

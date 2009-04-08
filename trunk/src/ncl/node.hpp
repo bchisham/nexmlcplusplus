@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include <ncl/util.hpp>
+#include <util/util.hpp>
 //#include "global_defs.hpp"
 namespace CDAO {
   class Node;
