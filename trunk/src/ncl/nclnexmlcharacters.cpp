@@ -1,0 +1,142 @@
+#include "nclnexmlcharacters.hpp"
+//#include "matrix.h"
+#include <cassert>
+#include <cctype>
+
+using namespace std;
+
+
+
+/*
+ * Process observation data. 
+ */
+static vector<string> characterStatesFromString( const string& in );
+
+//<-----Class members------------------>
+/*
+ * Wraps the NeXML::Characters* block with ncl api.
+ */
+NxsNexmlCharacters::NxsNexmlCharacters( NeXML::Characters* matrix):nxscharblock_( NULL ){
+    matrix_ = matrix;
+    //<---NCL Implementation----->
+    exsets_ = map< string, NxsUnsignedSet >();
+    indexsets_ = map< string, NxsUnsignedSet >();
+    partitions_ = map< string, NxsPartition >();
+    transformationManager_ = NxsTransformationManager();
+    datatypeMappers_ = vector< const NxsDiscreteDatatypeMapper*>();
+    codonPartitions_ = map< string, pair< NxsPartition, bool > >();
+
+   
+}
+
+NxsNexmlCharacters::NxsNexmlCharacters( NxsCharactersBlock* nxsblock ):nxscharblock_( nxsblock ){
+    //<---NCL Implementation----->
+    exsets_ = map< string, NxsUnsignedSet >();
+    indexsets_ = map< string, NxsUnsignedSet >();
+    partitions_ = map< string, NxsPartition >();
+    transformationManager_ = nxsblock->GetNxsTransformationManagerRef();
+    datatypeMappers_ = nxsblock->GetAllDatatypeMappers(); //vector< const NxsDiscreteDatatypeMapper*>();
+    codonPartitions_ = map< string, pair< NxsPartition, bool > >();
+
+}
+
+NxsNexmlCharacters::~NxsNexmlCharacters(){
+    //xsltFreeStylesheet( style );
+    //xmlFreeDoc( matrix );
+}
+
+unsigned NxsNexmlCharacters::ApplyExset(NxsUnsignedSet &exset){ 
+  return 0; 
+}
+bool NxsNexmlCharacters::AddNewExSet(const std::string &label, const NxsUnsignedSet & inds){ 
+  bool ret = false;
+  if ( nxscharblock_ ){ ret = nxscharblock_->AddNewExSet( label, inds); }
+  exsets_[ label ] = inds;
+  return ret; 
+}
+bool NxsNexmlCharacters::IsRespectCase() const { 
+  bool ret = false;
+  if ( nxscharblock_){ ret = nxscharblock_->IsRespectCase(); }
+  return ret; 
+}
+unsigned NxsNexmlCharacters::GetNCharTotal() const{ 
+  return matrix_->getNChar(); 
+}
+NxsTransformationManager & NxsNexmlCharacters::GetNxsTransformationManagerRef(){
+  return transformationManager_;
+}
+const NxsTransformationManager & NxsNexmlCharacters::GetNxsTransformationManagerRef() const{
+  return transformationManager_;
+}
+std::vector<const NxsDiscreteDatatypeMapper *> NxsNexmlCharacters::GetAllDatatypeMappers() const{
+  return datatypeMappers_;
+}
+bool NxsNexmlCharacters::AddNewCodonPosPartition(const std::string &label, const NxsPartition & inds, bool isDefault){
+  codonPartitions_[ label ] = pair< NxsPartition, bool >( inds, isDefault );
+  return true;
+}
+
+unsigned int NxsNexmlCharacters::GetMaxIndex() const { 
+  return this->GetNCharTotal() -1;
+}
+
+unsigned int NxsNexmlCharacters::GetIndicesForLabel(const std::string& label, NxsUnsignedSet* uset) const{
+  assert( NULL != uset );
+  *uset = exsets_.find( label )->second;
+  return uset->size(); 
+}
+
+unsigned int NxsNexmlCharacters::GetIndexSet(const std::string& label, NxsUnsignedSet* uset) const{ 
+  assert( NULL != uset );
+  *uset = indexsets_.find( label )->second;
+  return uset->size();
+}
+
+bool NxsNexmlCharacters::AddNewIndexSet(const std::string& label, const NxsUnsignedSet& uset){ 
+  bool ret = false;
+  indexsets_[ label ] = uset;
+  if ( nxscharblock_ ){ ret = nxscharblock_->AddNewIndexSet( label, uset ); }
+  return ret;
+}
+
+bool NxsNexmlCharacters::AddNewPartition(const std::string& label, const NxsPartition&  partition){ 
+  bool ret = false;
+  partitions_[ label ] = partition;
+  if ( nxscharblock_ ){ ret = nxscharblock_->AddNewPartition(label, partition ); }
+  return ret; 
+}
+//TODO Implement stub with something reasonable.
+std::string NxsNexmlCharacters::GetDefaultCodonPosPartitionName() const{
+   std::string ret = "";
+   if ( nxscharblock_ ){ ret = nxscharblock_->GetDefaultCodonPosPartitionName(); }
+   return ret;
+}
+//TODO Make sure this it the right thing to do.
+NxsPartition NxsNexmlCharacters::GetCodonPosPartition(const std::string& in ) const{
+    if ( nxscharblock_ ){ return nxscharblock_->GetCodonPosPartition( in ); }
+    map< string, NxsPartition >::const_iterator ret = partitions_.find( in );
+    return ret == partitions_.end() ? NxsPartition() : ret->second;
+}
+
+
+vector<string> characterStatesFromString( const string& in ){
+   //take care of the empty string case right away.
+   vector<string> ret = vector<string>();
+   if ( in.size() != 0 ){
+     //strings with white-space have characters delimited by spaces.
+     if ( in.find(' ') == string::npos || in.find('\t') == string::npos ){
+        string current = "";
+        for ( unsigned int i = 0; i < in.size(); ++i ){ 
+           if ( isspace(  in.at( i ) ) ){ ret.push_back( current ); }
+           else { current += in.at( i ); }
+        }
+     }
+     //otherwise assume each position in the string is a character state observation.
+     else {
+        for ( unsigned int i = 0; i < in.size(); ++i ){
+           ret.push_back( string("") += in.at( i )  );
+        }
+     }
+   }
+   return ret;
+}

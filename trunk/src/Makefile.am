@@ -25,7 +25,7 @@ libNeXMLCpp_la_SOURCES=annotation.cpp \
 		       parser/parser.cpp \
 		       ncl/nclnexml.cpp \
 		       ncl/nclnexmltaxa.cpp \
-		       ncl/nclnexmlmatrix.cpp \
+		       ncl/nclnexmlcharacters.cpp \
 		       ncl/nclnexmltree.cpp \
 		       ncl/tree_description_scanner.cpp \
 		       ncl/tree_description_parser.cpp

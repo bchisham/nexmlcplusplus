@@ -8,9 +8,10 @@
 //#include "nclxslt.h"
 #include "../nexml.hpp"
 #include "nclnexmltaxa.hpp"
-#include "nclnexmlmatrix.hpp"
+#include "nclnexmlcharacters.hpp"
 #include "nclnexmltree.hpp"
 #include <string>
+#include <vector>
 
 /*
  * NxsNexml represents a single Nexml document.
@@ -30,7 +31,7 @@ class NxsNexml {
         NeXML::Nexml* doc_;
 //	xmlDocPtr source;
         NxsNexmlTaxa* taxa_;
-        NxsNexmlMatrix* matrix_;
+        std::vector< NxsNexmlCharacters* > matrix_;
         NxsNexmlTree* tree_;
 };
 
